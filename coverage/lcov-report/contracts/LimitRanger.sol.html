@@ -1,0 +1,1502 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/LimitRanger.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> LimitRanger.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">93.75% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>105/112</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">86.67% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>52/60</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">86.36% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>19/22</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">94.12% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>112/119</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">23×</span>
+<span class="cline-any cline-yes">22×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24×</span>
+<span class="cline-any cline-yes">23×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22×</span>
+<span class="cline-any cline-yes">21×</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-yes">20×</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-yes">18×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: BUSL-1.1
+pragma solidity =0.7.6;
+pragma abicoder v2;
+&nbsp;
+import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
+import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol';
+import '@uniswap/v3-core/contracts/libraries/TickMath.sol';
+import '@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol';
+import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts/math/SafeMath.sol';
+import '@uniswap/v3-periphery/contracts/interfaces/INonfungiblePositionManager.sol';
+import '@uniswap/v3-periphery/contracts/interfaces/external/IWETH9.sol';
+import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
+import '@uniswap/v3-periphery/contracts/base/LiquidityManagement.sol';
+import "hardhat/console.sol";
+&nbsp;
+/// @title A contract which allows automated range orders for Uniswap by opening a liquidity position 
+///        and allowing anyone to close the position once the selling price is reached and returning the assets
+///        to the original owner - minus a protocol fee (this is usually done by a bot). 
+contract LimitRanger is IERC721Receiver {
+&nbsp;
+    /// Uniswap smart contracts
+    INonfungiblePositionManager public immutable nonfungiblePositionManager;
+    IUniswapV3Factory public immutable uniswapV3Factory;
+&nbsp;
+    /// Smart contract of eth wrapper token
+    IWETH9 public immutable weth9;
+&nbsp;
+    /// Uniswap liquidity position NFT smart contract
+    IERC721 public immutable uniNft;
+&nbsp;
+    /// @dev Address of the protocol operator who has administrative rights
+    address protocolOperator;
+&nbsp;
+    /// @dev Address where protocol fees are sent to
+    address payable protocolFeeReceiver;
+    
+    /// current fee in per thousand
+    uint16 public currentMinFee;
+&nbsp;
+    /// switch to disable opening of new positions
+    bool public depositsActive;
+&nbsp;
+    /// using safe math lib for uint256 variables
+    using SafeMath for uint256;
+&nbsp;
+    /// @dev Uniswap maximum tick value of a liquidity pool
+    int24 constant MAX_TICK = (2**24/2)-1;
+&nbsp;
+    /// Event for the opening of a new position
+    /// @param token The ID of the uniswap NFT which got created opening the position
+    /// @param owner The address which opened the position
+    event AddPosition(uint256 token, address indexed owner, uint128 liquidity, bool sellAbove);
+&nbsp;
+    /// Event for when a user takes ownership of his liquidity position which got created opening a position
+    /// @param token The ID of the uniswap NFT the user takes ownership off 
+    /// @param owner The address which opened the position
+    event RemovePosition(uint256 token, address indexed owner);
+&nbsp;
+    /// Event for when a position gets closed because the sell price was reached. Closing transfers the tokens in the liquidity position 
+    /// to the initial owner minus the fees which get transferred to the protocolFeeReceiver address
+    /// @param token The ID of the uniswap NFT which got closed
+    /// @param owner The address which opened the position
+    event ClosePosition(uint256 token, address indexed owner);
+&nbsp;
+    /// Event for when a user cancels one of his positions which removes all liquidity from the liquidity position and transfers
+    /// all tokens back to him, without applying any fees
+    /// @param token The ID of the uniswap NFT representing the position which gets cancelled
+    /// @param owner The address which opened the position
+    event CancelPosition(uint256 token, address indexed owner);
+&nbsp;
+    /// Event for when a new minimum protocol fee is set.
+    /// @param newFee The new fee amount in per thousand.
+    event MinimumFeeSet(uint16 newFee);
+&nbsp;
+    /// Event for when a new address for the fee receiver is set.
+    /// @param newFeeReceiver The address which receives all protocol fees.
+    event FeeReceiverSet(address newFeeReceiver);
+&nbsp;
+    /// Event for when deposits are activated/disabled.
+    /// @param active If true deposits are active, if false deposits are disabled.
+    event DepositsActiveSet(bool active);
+&nbsp;
+    /// @dev Information about a position
+    /// @param owner The address which opened the position
+    /// @param sellTarget The tick at which the position can be closed
+    /// @param fee The fee in per thounsand which gets deducted when the position is closed
+    /// @param sellAboveTarget true if the tick of the liquidity pool needs to be at or above the sellTarget.
+    ///                        false if it needs to be at or below
+    /// @param unwrapToNative if true wrapped ether will be unwrapped before being sent to the owner when the position is closed
+    struct PositionInfo {
+        address owner;
+        int24 sellTarget;
+        uint16 fee;
+        bool sellAboveTarget;
+        bool unwrapToNative;
+    }
+&nbsp;
+    /// @dev Mint params for a LimitRanger position.
+    struct MintParams {
+        address token0; 
+        address token1;
+        uint256 token0Amount;
+        uint256 token1Amount;
+        int24 lowerTick;
+        int24 upperTick;
+        uint24 poolFee;
+        uint256 deadline;
+        uint16 protocolFee;
+        bool unwrapToNative;
+    }
+&nbsp;
+    /// @dev positionInfos[tokenId] =&gt; PositionInfo Lookup of position infos by uniswap tokenId
+    mapping(uint256 =&gt; PositionInfo) public positionInfos;
+&nbsp;
+    /// @dev ownedTokens[ownerAddress] = tokenIds[] Lookup of owned positions (uniswap tokenIds) by owner address.
+    ///      Owned token Ids are stored in an array.
+    mapping(address =&gt; uint256[]) internal ownedTokens;
+&nbsp;
+    /// @dev ownedTokensIndex[tokenId] = index Lookup of the index of a position in the ownedTokens array.
+    mapping(uint256 =&gt; uint256) internal ownedTokensIndex;
+&nbsp;
+    /// Create instance of contract
+    /// @param _nonfungiblePositionManager Corresponding Uniswap contract
+    /// @param _uniswapV3Factory Corresponding Uniswap contract
+    /// @param _weth9 Eth ERC20 wrapper token contract
+    constructor(
+        INonfungiblePositionManager _nonfungiblePositionManager,
+        IUniswapV3Factory _uniswapV3Factory,
+        IWETH9 _weth9
+    ) {
+        nonfungiblePositionManager = _nonfungiblePositionManager;
+        uniswapV3Factory = _uniswapV3Factory;
+        uniNft = _nonfungiblePositionManager;
+        weth9 = _weth9;
+        protocolOperator = msg.sender;
+        protocolFeeReceiver = payable(msg.sender);
+        currentMinFee = 1;
+        depositsActive = true;
+    }
+&nbsp;
+    /*****************************************/
+    /*************** MODIFIERS ***************/
+    /*****************************************/
+    /// Modifier to check deadline of a transaction.
+    modifier checkDeadline(uint256 deadline) {
+        require(block.timestamp &lt;= deadline, 'Transaction too old');
+        _;
+    }
+&nbsp;
+    /// Modifier which checks if the operation is performed by the owner of the given token.
+    modifier onlyOwner(uint256 tokenId) {
+        require(positionInfos[tokenId].owner == msg.sender, 'Operation only allowed for owner of position');
+        _;
+    }
+&nbsp;
+    /// Modifier which checks if the operation is performed by the protocol operator.
+    modifier onlyOperator() {
+        require(msg.sender == protocolOperator, 'Operaton only allowed for operator of contract');
+        _;
+    }
+&nbsp;
+    /// Modifier which checks if new deposits are currently allowed
+    modifier onlyDepositsActive() {
+        require(depositsActive, 'Deposits are currently disabled');
+        _;
+    }
+&nbsp;
+    /*****************************************/
+    /******** PROTOCOL ADMINISTRATION ********/
+    /*****************************************/
+&nbsp;
+    /// Sets the address to which protocol fees are sent
+    /// @param receiver The new protocol fee receiver address.
+    function setProtocolFeeReceiver(address receiver) external onlyOperator {        
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(address(0) != receiver);
+        protocolFeeReceiver = payable(receiver);
+        emit FeeReceiverSet(receiver);
+    }
+&nbsp;
+    /// Sets the minimumb protocol fee for new positions in per thousand.
+    /// @param fee The new minimum fee.
+    function setMinimumFee(uint16 fee) external onlyOperator {
+        currentMinFee = fee;
+        emit MinimumFeeSet(fee);
+    }
+&nbsp;
+    /// Toggles if new deposits are allowed or not.
+    /// @param active If true new deposits are allowed. Otherwise no new deposits can be made.
+    function setDepositsActive(bool active) external onlyOperator {
+        depositsActive = active;
+        emit DepositsActiveSet(active);
+    }
+&nbsp;
+&nbsp;
+    /*****************************************/
+    /********** PUBLIC FUNCTIONS *************/
+    /*****************************************/
+&nbsp;
+    /// Returns the address of the owner of a given token.
+    /// @param tokenId The tokenId of the position to retrieve the owner address of.
+    /// @return Address of the owner of the given position.
+<span class="fstat-no" title="function not covered" >    function getOwner(uint256 tokenId) external view returns (address) {</span>
+<span class="cstat-no" title="statement not covered" >        return(positionInfos[tokenId].owner);</span>
+    }
+&nbsp;
+    /// Returns all owned tokenIds for the given address
+    /// @param owner The address for which the owned positions should be returned.
+    /// @return Token IDs of the positions owned by the given address.
+    function getOwnedPositions(address owner) external view returns (uint256[] memory) {
+        return ownedTokens[owner];
+    }
+&nbsp;
+    /// Retrieve position information for the given token ID.
+    /// @param tokenId The token ID identifying the position to be returned.
+    /// @return Position information for the position identified by the given token ID.
+<span class="fstat-no" title="function not covered" >    function getPositionInfo(uint256 tokenId) external view returns (PositionInfo memory) {</span>
+<span class="cstat-no" title="statement not covered" >        return positionInfos[tokenId];</span>
+    }
+&nbsp;
+    /// Cancels a position, removing all liquidity and fees from the Uniswap liquidity position and returning the assets 
+    /// to the owner without charging a protocol fee.
+    /// Can only be triggered by the owner of the position.
+    /// @param tokenId Token ID identifying the position to be cancelled.
+    /// @return success True if the position was successfully canceled. False otherwise.
+    function cancelPosition(uint256 tokenId) external onlyOwner(tokenId) returns (bool success) {
+        bool result = _payOutPosition(tokenId, false);
+        <span class="missing-if-branch" title="else path not taken" >E</span>if(result) {
+            emit CancelPosition(tokenId, msg.sender);
+        }
+        return result;
+    }
+&nbsp;
+    /// Stops a position, removing all liquidity and fees from the Uniswap liquidity position and returning the assets 
+    /// to the owner minus the set fee which is sent to the protocol fee receiver address.
+    /// Can only be triggered when the tick value requirement of the position is met.
+    /// @param tokenId Token ID identifying the position to be stopped.
+    /// @return success True if the position was successfully stopped. False otherwise.
+    function stopPosition(uint256 tokenId) external returns (bool success){
+        address owner = positionInfos[tokenId].owner;
+        bool result = _payOutPosition(tokenId, true);
+        <span class="missing-if-branch" title="else path not taken" >E</span>if(result) {
+            emit ClosePosition(tokenId, owner);
+        }
+        return result;
+    }
+&nbsp;
+&nbsp;
+    /// Transfers the NFT identifying the Uniswap liqudity position to the owner of the position.
+    /// Can only be called by the owner.
+    /// @param tokenId The id of the position to be returned to the owner
+    function retrieveNFT(uint256 tokenId) external onlyOwner(tokenId) {        
+        _removePosition(tokenId, msg.sender);
+        emit RemovePosition(tokenId, msg.sender); 
+    }
+&nbsp;
+    /// Opens a new position.
+    /// @param params Mint new position parameters
+    /// @return tokenId The token ID identifying this position and the corresponding Uniswap liquidity position.
+    function mintNewPosition(MintParams calldata params)
+        external
+        payable 
+        onlyDepositsActive
+        checkDeadline(params.deadline)
+        returns (           
+            uint256 tokenId      
+        )
+    {       
+        require(params.token0Amount == 0 || params.token1Amount == 0, 'Token amount of token0 or token1 must be 0');
+        require(params.protocolFee &gt;= currentMinFee, 'Protocol fee set too low');
+        {
+            IUniswapV3Pool pool = IUniswapV3Pool(uniswapV3Factory.getPool(params.token0, params.token1, params.poolFee));        
+            //check if current tick is outside sell range
+            (,int24 tick,,,,,) = pool.slot0();
+            if(params.token0Amount &gt; 0) {
+                require(tick &lt;= params.lowerTick, "Current price of pool doesn't match desired sell range");
+            } else {
+                require(tick &gt;= params.upperTick, "Current price of pool doesn't match desired sell range");
+            }
+        }
+        // Approve the position manager
+        if(params.token0Amount &gt; 0) {
+            // get token from user    
+            IERC20 token = IERC20(params.token0);
+            if(token != weth9) {
+                bool result = token.transferFrom(msg.sender, address(this), params.token0Amount);            
+                <span class="missing-if-branch" title="else path not taken" >E</span>require(result, "Transfer of token failed");
+                TransferHelper.safeApprove(params.token0, address(nonfungiblePositionManager), params.token0Amount);
+            }
+        } else {
+            IERC20 token = IERC20(params.token1);
+            if(token != weth9) {
+                bool result = token.transferFrom(msg.sender, address(this), params.token1Amount);
+                <span class="missing-if-branch" title="else path not taken" >E</span>require(result, "Transfer of token failed");
+                TransferHelper.safeApprove(params.token1, address(nonfungiblePositionManager), params.token1Amount);
+            }
+        }
+        INonfungiblePositionManager.MintParams memory uniParams =
+            INonfungiblePositionManager.MintParams({
+                token0: params.token0,
+                token1: params.token1,
+                fee: params.poolFee,
+                tickLower: params.lowerTick,
+                tickUpper: params.upperTick,
+                amount0Desired: params.token0Amount,
+                amount1Desired: params.token1Amount,
+                amount0Min: 0,
+                amount1Min: 0,
+                recipient: address(this),
+                deadline: block.timestamp
+            });
+&nbsp;
+        uint256 ethAmount = 0;
+        if(params.token0 == address(weth9)) {
+            ethAmount = params.token0Amount;
+        } else if (params.token1 == address(weth9)) {
+            ethAmount = params.token1Amount;
+        }
+        uint128 liquidity = 0;
+        (tokenId,liquidity,,) = nonfungiblePositionManager.mint{value: ethAmount}(uniParams);
+&nbsp;
+        if(params.token0Amount &gt; 0) {
+            _storePositionInfo(tokenId, params.upperTick, true, msg.sender, params.protocolFee, params.unwrapToNative);
+        } else {
+            _storePositionInfo(tokenId, params.lowerTick, false, msg.sender, params.protocolFee, params.unwrapToNative);
+        }
+        emit AddPosition(tokenId, msg.sender, liquidity, params.token0Amount &gt; 0);
+        return tokenId;
+    }
+&nbsp;
+    /*****************************************/
+    /********** INTERNAL FUNCTIONS ***********/
+    /*****************************************/
+&nbsp;
+    /// @dev Transfers the uniswap liquidity position NFT to the receiver and removes the given position data from the internal storage.
+    /// @param tokenId Token ID identifying the position to be removed.
+    /// @param receiver Receiver of the uniswap liqudity position NFT.
+    function _removePosition(uint256 tokenId, address receiver) internal {
+        // remove information related to tokenId
+        delete positionInfos[tokenId];
+        // remove token from ownedTokens array by reducing the arrays size and moving the token in last position to the spot of the to be deleted one.
+        // set last token to index of removed token, then decrease array size (so we don't have gaps in the array)
+        uint256 tokenIndex = ownedTokensIndex[tokenId];
+        uint256 lastTokenIndex = (ownedTokens[receiver].length.sub(1));
+        uint256 lastToken = ownedTokens[receiver][lastTokenIndex];
+        ownedTokens[receiver][tokenIndex] = lastToken;
+        ownedTokens[receiver].pop();
+        ownedTokensIndex[tokenId] = 0;
+        ownedTokensIndex[lastToken] = tokenIndex;
+        // transfer ownership to original owner
+        nonfungiblePositionManager.safeTransferFrom(address(this), receiver, tokenId);
+    }
+&nbsp;
+    /// @dev Saves information about a position in smart contract storage.
+    /// @param tokenId Token ID of the position to be stored.
+    /// @param sellTarget Uniswap liquidity pool tick which needs to be reached to close the position.
+    /// @param sellAboveTarget When true the uniswap liquidity pool tick needs to be at or over the saved sellTarget value. If false it needs to be at or under the value.
+    /// @param owner The address of the owner of the position.
+    /// @param fee The protocol fee for this position.
+    function _storePositionInfo(uint256 tokenId, int24 sellTarget, bool sellAboveTarget, address owner, uint16 fee, bool unwrapToNative) internal {
+        positionInfos[tokenId] = PositionInfo({owner: owner, sellTarget: sellTarget, sellAboveTarget: sellAboveTarget, fee: fee, unwrapToNative: unwrapToNative});
+        uint256 length = ownedTokens[owner].length;
+        ownedTokens[owner].push(tokenId);
+        ownedTokensIndex[tokenId] = length;
+    }
+&nbsp;
+    /// @dev Closes the uniswap liquidity position and returning the assets to the position owner. If stoppedByProtocol is set the protocol fee is deducted and sent 
+    ///      to the protocol fee receiver address.
+    /// @param tokenId The token ID identifying the position.
+    /// @param stoppedByProtocol If true the function was triggered by stop position and the protocol fee is deducted from the assets.
+    ///                          Otherwise it was triggered by the owner itself and no fee is deducted.
+    /// @return success True if the position could be liquidated and paid out.
+    function _payOutPosition(uint256 tokenId, bool stoppedByProtocol) internal returns (bool success) {
+        // get position &amp; pool info
+        (,,address token0, address token1, uint24 fee,,, uint128 liquidity,,,,) =  nonfungiblePositionManager.positions(tokenId);        
+        PositionInfo memory position = positionInfos[tokenId];
+&nbsp;
+        require(position.owner != address(0), 'Position not found');
+        {
+            IUniswapV3Pool pool = IUniswapV3Pool(uniswapV3Factory.getPool(token0, token1, fee));        
+            // only check sell targets when stopped by protocol
+            if(stoppedByProtocol) {
+                (,int24 tick,,,,,) = pool.slot0();
+                if(position.sellAboveTarget) {
+                    require(tick &gt;= position.sellTarget, 'Sell target not reached. Current tick below sell target tick.');
+                } else {
+                    require(tick &lt;= position.sellTarget, 'Sell target not reached. Current tick above sell target tick.');
+                }
+            }
+            // remove all liquidity from position
+            INonfungiblePositionManager.DecreaseLiquidityParams memory params = INonfungiblePositionManager.DecreaseLiquidityParams(tokenId,
+            liquidity,
+            0, //amount0Min
+            0, //amount1Min;
+            block.timestamp // deadline
+            );
+            // not checking return value since we collect maximum anyways
+            nonfungiblePositionManager.decreaseLiquidity(params);
+        }
+        {
+            // collect all tokens (fees + removed liquidity)
+            INonfungiblePositionManager.CollectParams memory params2 =
+                INonfungiblePositionManager.CollectParams({
+                    tokenId: tokenId,
+                    recipient: address(this),
+                    amount0Max: type(uint128).max,
+                    amount1Max: type(uint128).max
+                });
+            (uint256 collectedAmount0, uint256 collectedAmount1) = nonfungiblePositionManager.collect(params2);
+            
+            // calculate fee
+            uint256 fee0 = 0;
+            uint256 fee1 = 0;
+            
+            if(stoppedByProtocol) {
+                // we accept loss of precision here
+                fee0 = (collectedAmount0 / 1000) * position.fee;
+                fee1 = (collectedAmount1 / 1000) * position.fee;
+            }
+                    
+            // transfer tokens to position owner and fees to protocol owner if applicable
+            _payOutToken(collectedAmount0, fee0, token0, position.owner, position.unwrapToNative);
+            _payOutToken(collectedAmount1, fee1, token1, position.owner, position.unwrapToNative);        
+            _removePosition(tokenId, position.owner);
+        }
+        return true;
+    }
+&nbsp;
+&nbsp;
+    /// @dev sends the specified token amount to the owner minus the specified fee which is sent to the protocol fee receiver address
+    /// @param collectedAmount Amount of the token which is to be paid out
+    /// @param fee Fee amount to be deduced from the amount to be paid out
+    /// @param token Address of the token which is to be paid out
+    /// @param receiver Receiver of the token to be paid out
+    /// @param unwrapToNative If true wrapped ether gets unwrapped before being sent out
+    function _payOutToken(uint256 collectedAmount, uint256 fee, address token, address receiver, bool unwrapToNative) internal {
+        <span class="missing-if-branch" title="else path not taken" >E</span>if(collectedAmount &gt; 0) {
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (unwrapToNative &amp;&amp; token == address(weth9)) {
+<span class="cstat-no" title="statement not covered" >                weth9.withdraw(collectedAmount)</span>;
+<span class="cstat-no" title="statement not covered" >                TransferHelper.safeTransferETH(receiver, collectedAmount - fee)</span>;
+            } else {
+                TransferHelper.safeTransfer(token, receiver, collectedAmount - fee);
+            }
+        }
+        if(fee &gt; 0) {
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (unwrapToNative &amp;&amp; token == address(weth9)) {
+<span class="cstat-no" title="statement not covered" >                TransferHelper.safeTransferETH(protocolFeeReceiver, fee)</span>;
+            } else {
+                TransferHelper.safeTransfer(token, protocolFeeReceiver, fee);
+            }
+        }
+    }
+&nbsp;
+&nbsp;
+    // @dev Implementing `onERC721Received` so this contract can receive custody of erc721 tokens. Stores information about the sender in positionInfos structure.
+<span class="fstat-no" title="function not covered" >    function onERC721Received(</span>
+        address operator,
+        address,
+        uint256 tokenId,
+        bytes calldata
+    ) external override returns (bytes4) {   
+<span class="cstat-no" title="statement not covered" >        _storePositionInfo(tokenId, MAX_TICK, true, operator, currentMinFee, false)</span>;     
+<span class="cstat-no" title="statement not covered" >        return this.onERC721Received.selector;</span>
+    }
+&nbsp;
+    // @dev Escape hatch for any eth stranded in the contract. Only callable by operator.
+    function retrieveEth() external onlyOperator returns(bool){
+        return protocolFeeReceiver.send(address(this).balance);
+    }
+&nbsp;
+    // @dev Escape hatch to retrieve ERC20s stranded in the contract. Only callable by operator.
+    function retrieveERC20(address token) external onlyOperator {
+        IERC20 erc20 = IERC20(token);
+        TransferHelper.safeTransfer(token, protocolFeeReceiver, erc20.balanceOf(address(this)));
+    }
+&nbsp;
+    // @dev receive function to be able to receive ether on contract 
+    receive() external payable { }
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jul 14 2022 21:20:49 GMT+0200 (Central European Summer Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

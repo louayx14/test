@@ -151,13 +151,13 @@ contract LimitRanger is IERC721Receiver {
 
     /// Modifier which checks if the operation is performed by the owner of the given token.
     modifier onlyOwner(uint256 tokenId) {
-        require(positionInfos[tokenId].owner == msg.sender, 'Operation only allowed for owner of token');
+        require(positionInfos[tokenId].owner == msg.sender, 'Operation only allowed for owner of position');
         _;
     }
 
     /// Modifier which checks if the operation is performed by the protocol operator.
     modifier onlyOperator() {
-        require(msg.sender == protocolOperator);
+        require(msg.sender == protocolOperator, 'Operaton only allowed for operator of contract');
         _;
     }
 
@@ -296,7 +296,7 @@ contract LimitRanger is IERC721Receiver {
                 TransferHelper.safeApprove(params.token1, address(nonfungiblePositionManager), params.token1Amount);
             }
         }
-         INonfungiblePositionManager.MintParams memory uniParams =
+        INonfungiblePositionManager.MintParams memory uniParams =
             INonfungiblePositionManager.MintParams({
                 token0: params.token0,
                 token1: params.token1,
@@ -376,16 +376,16 @@ contract LimitRanger is IERC721Receiver {
         (,,address token0, address token1, uint24 fee,,, uint128 liquidity,,,,) =  nonfungiblePositionManager.positions(tokenId);        
         PositionInfo memory position = positionInfos[tokenId];
 
-        require(position.owner != address(0), 'Uniswap position with given token id is not managed by LimitRanger (no position found)');
+        require(position.owner != address(0), 'Position not found');
         {
             IUniswapV3Pool pool = IUniswapV3Pool(uniswapV3Factory.getPool(token0, token1, fee));        
             // only check sell targets when stopped by protocol
             if(stoppedByProtocol) {
                 (,int24 tick,,,,,) = pool.slot0();
                 if(position.sellAboveTarget) {
-                    require(tick >= position.sellTarget);
+                    require(tick >= position.sellTarget, 'Sell target not reached. Current tick below sell target tick.');
                 } else {
-                    require(tick <= position.sellTarget);
+                    require(tick <= position.sellTarget, 'Sell target not reached. Current tick above sell target tick.');
                 }
             }
             // remove all liquidity from position
@@ -398,30 +398,32 @@ contract LimitRanger is IERC721Receiver {
             // not checking return value since we collect maximum anyways
             nonfungiblePositionManager.decreaseLiquidity(params);
         }
-        // collect all tokens (fees + removed liquidity)
-        INonfungiblePositionManager.CollectParams memory params2 =
-            INonfungiblePositionManager.CollectParams({
-                tokenId: tokenId,
-                recipient: address(this),
-                amount0Max: type(uint128).max,
-                amount1Max: type(uint128).max
-            });
-        (uint256 collectedAmount0, uint256 collectedAmount1) = nonfungiblePositionManager.collect(params2);
-        
-        // calculate fee
-        uint256 fee0 = 0;
-        uint256 fee1 = 0;
-        
-        if(stoppedByProtocol) {
-            // we accept loss of precision here
-            fee0 = (collectedAmount0 / 1000) * position.fee;
-            fee1 = (collectedAmount1 / 1000) * position.fee;
+        {
+            // collect all tokens (fees + removed liquidity)
+            INonfungiblePositionManager.CollectParams memory params2 =
+                INonfungiblePositionManager.CollectParams({
+                    tokenId: tokenId,
+                    recipient: address(this),
+                    amount0Max: type(uint128).max,
+                    amount1Max: type(uint128).max
+                });
+            (uint256 collectedAmount0, uint256 collectedAmount1) = nonfungiblePositionManager.collect(params2);
+            
+            // calculate fee
+            uint256 fee0 = 0;
+            uint256 fee1 = 0;
+            
+            if(stoppedByProtocol) {
+                // we accept loss of precision here
+                fee0 = (collectedAmount0 / 1000) * position.fee;
+                fee1 = (collectedAmount1 / 1000) * position.fee;
+            }
+                    
+            // transfer tokens to position owner and fees to protocol owner if applicable
+            _payOutToken(collectedAmount0, fee0, token0, position.owner, position.unwrapToNative);
+            _payOutToken(collectedAmount1, fee1, token1, position.owner, position.unwrapToNative);        
+            _removePosition(tokenId, position.owner);
         }
-                
-        // transfer tokens to position owner and fees to protocol owner if applicable
-        _payOutToken(collectedAmount0, fee0, token0, position.owner, position.unwrapToNative);
-        _payOutToken(collectedAmount1, fee1, token1, position.owner, position.unwrapToNative);        
-        _removePosition(tokenId, position.owner);
         return true;
     }
 
@@ -470,7 +472,7 @@ contract LimitRanger is IERC721Receiver {
     // @dev Escape hatch to retrieve ERC20s stranded in the contract. Only callable by operator.
     function retrieveERC20(address token) external onlyOperator {
         IERC20 erc20 = IERC20(token);
-        erc20.transferFrom(address(this), protocolFeeReceiver, erc20.balanceOf(address(this)));
+        TransferHelper.safeTransfer(token, protocolFeeReceiver, erc20.balanceOf(address(this)));
     }
 
     // @dev receive function to be able to receive ether on contract 
