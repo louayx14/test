@@ -41,7 +41,7 @@ async function limitRangerFixture([wallet, admin, protocolReceiver]: Wallet[]): 
     const tradeToken1 = (await tokenFactory.deploy("Trade Token 1", "TT1", 18)) as TestERC20
 
     const nftFactory = await ethers.getContractFactory("TestERC721");
-    const testNFT  = (await nftFactory.deploy("TestNFT", "TNFT")) as TestERC721
+    const testNFT = (await nftFactory.deploy("TestNFT", "TNFT")) as TestERC721
 
     return {
         limitRanger,
@@ -381,8 +381,8 @@ describe("LimitRanger", () => {
         describe("onERC721Received", async () => {
 
             beforeEach(async () => {
-            await mockV3Factory.mock.getPool.returns(mockPool.address);
-            await mockPool.mock.slot0.returns(0, initialPoolTick, 0, 0, 0, 0, true);
+                await mockV3Factory.mock.getPool.returns(mockPool.address);
+                await mockPool.mock.slot0.returns(0, initialPoolTick, 0, 0, 0, 0, true);
                 await preparePositionToken0()
             });
 
@@ -390,11 +390,11 @@ describe("LimitRanger", () => {
                 expect((await limitRanger.getPositionInfo(nftTokenId)).owner).to.be.equal(enduser1.address);
                 await testNFT.connect(wallet).mint(wallet.address, nftTokenId);
                 await expect(testNFT.connect(wallet)["safeTransferFrom(address,address,uint256)"](wallet.address, limitRanger.address, nftTokenId)).revertedWith('Only position manager');
-                expect((await limitRanger.getPositionInfo(nftTokenId)).owner).to.be.equal(enduser1.address);                
+                expect((await limitRanger.getPositionInfo(nftTokenId)).owner).to.be.equal(enduser1.address);
             })
         });
     });
-    
+
     describe("admin functions", async () => {
         describe("setMinimumFee", async () => {
             it("sets minimum fee", async () => {
@@ -409,22 +409,22 @@ describe("LimitRanger", () => {
         });
 
         describe("setMinimumFee", async () => {
-            it("sets deposits inactive", async () => {            
+            it("sets deposits inactive", async () => {
                 await limitRanger.connect(wallet).setDepositsActive(false);
                 expect(await limitRanger.depositsActive()).to.be.equal(false);
             });
-            it("sets deposits active", async () => {            
+            it("sets deposits active", async () => {
                 await limitRanger.connect(wallet).setDepositsActive(true);
                 expect(await limitRanger.depositsActive()).to.be.equal(true);
             });
-            it("fails if not called by operator", async () => {                
+            it("fails if not called by operator", async () => {
                 await expect(limitRanger.connect(enduser1).setDepositsActive(false)).revertedWith('Operaton only allowed for operator of contract');
             });
         });
 
         describe("retrieveEth", async () => {
-            it("retrieves eth from contract", async () => {  
-                let amountToSend = ethers.utils.parseEther("1.0");          
+            it("retrieves eth from contract", async () => {
+                let amountToSend = ethers.utils.parseEther("1.0");
                 await wallet.sendTransaction({
                     to: limitRanger.address,
                     value: amountToSend,
@@ -433,13 +433,13 @@ describe("LimitRanger", () => {
                 await limitRanger.connect(wallet).retrieveEth();
                 expect(await ethers.provider.getBalance(limitRanger.address)).to.be.equal(0);
             });
-            it("fails if not called by operator", async () => {                
+            it("fails if not called by operator", async () => {
                 await expect(limitRanger.connect(enduser1).retrieveEth()).revertedWith('Operaton only allowed for operator of contract');
             });
         });
 
         describe("retrieveERC20", async () => {
-            it("retrieves erc20 token from contract", async () => {  
+            it("retrieves erc20 token from contract", async () => {
                 let amountToSend = 10000
                 await tradeToken0.mint(limitRanger.address, amountToSend);
                 let initialReceiverBalance = await tradeToken0.balanceOf(protocolReceiver.address);
@@ -448,7 +448,7 @@ describe("LimitRanger", () => {
                 expect(await tradeToken0.balanceOf(limitRanger.address)).to.be.equal(0);
                 expect(await tradeToken0.balanceOf(protocolReceiver.address)).to.be.equal(initialReceiverBalance.add(amountToSend));
             });
-            it("fails if not called by operator", async () => {                
+            it("fails if not called by operator", async () => {
                 await expect(limitRanger.connect(enduser1).retrieveERC20(tradeToken0.address)).revertedWith('Operaton only allowed for operator of contract');
             });
         });
