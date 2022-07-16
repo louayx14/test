@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for contracts/test/TestERC20.sol</title>
+    <title>Code coverage report for contracts/test/TestERC721.sol</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -16,13 +16,13 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="../../index.html">all files</a> / <a href="index.html">contracts/test/</a> TestERC20.sol
+      <a href="../../index.html">all files</a> / <a href="index.html">contracts/test/</a> TestERC721.sol
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>4/4</span>
+        <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>4/4</span>
+        <span class='fraction'>2/2</span>
       </div>
     </div>
   </div>
@@ -56,33 +56,30 @@
 11
 12
 13
-14
-15</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+14</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6×</span>
-<span class="cline-any cline-yes">6×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">51×</span>
-<span class="cline-any cline-yes">51×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">pragma solidity =0.7.6;
 &nbsp;
-import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 &nbsp;
-contract TestERC20 is ERC20 {
-    constructor(string memory name_, string memory symbol_, uint8 decimals) ERC20(name_, symbol_) {
-        _setupDecimals(decimals); 
-        _mint(msg.sender, 1000000000000000000000000000);
+contract TestERC721 is ERC721 {
+    constructor(string memory name_, string memory symbol_) ERC721(name_, symbol_) {
+        
     }
 &nbsp;
-    function mint(address to, uint256 amount) public returns (bool) {
-        _mint(to, amount);
+    function mint(address to, uint256 tokenId) public returns (bool) {
+        _safeMint(to, tokenId);
         return true;
     }
 }</pre></td></tr>
