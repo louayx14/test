@@ -167,6 +167,11 @@ contract LimitRanger is IERC721Receiver {
         _;
     }
 
+    modifier onlyNonfungiblePositionManager(){
+        require(msg.sender == address(nonfungiblePositionManager), "Only position manager");
+        _;
+    }
+
     /*****************************************/
     /******** PROTOCOL ADMINISTRATION ********/
     /*****************************************/
@@ -459,7 +464,7 @@ contract LimitRanger is IERC721Receiver {
         address,
         uint256 tokenId,
         bytes calldata
-    ) external override returns (bytes4) {   
+    ) external override onlyNonfungiblePositionManager returns (bytes4) {   
         _storePositionInfo(tokenId, MAX_TICK, true, operator, currentMinFee, false);     
         return this.onERC721Received.selector;
     }
