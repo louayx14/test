@@ -9,7 +9,7 @@ import PosManagerAbi from "../artifacts/@uniswap/v3-periphery/contracts/interfac
 import IWETH9 from "../artifacts/@uniswap/v3-periphery/contracts/interfaces/external/IWETH9.sol/IWETH9.json"
 import { LimitRanger } from "../typechain-types/contracts"
 
-import { TestERC20 } from "../typechain-types/contracts/test"
+import { TestERC20, TestERC721 } from "../typechain-types/contracts/test"
 import { ethers, waffle } from "hardhat";
 
 use(solidity)
@@ -22,6 +22,7 @@ interface LimitRangerFixture {
     mockV3Factory: Contract;
     wethContract: Contract;
     mockPool: Contract;
+    testNFT: TestERC721;
 }
 
 async function limitRangerFixture([wallet, admin, protocolReceiver]: Wallet[]): Promise<LimitRangerFixture> {
@@ -39,6 +40,8 @@ async function limitRangerFixture([wallet, admin, protocolReceiver]: Wallet[]): 
     const tradeToken0 = (await tokenFactory.deploy("Trade Token 1", "TT1", 18)) as TestERC20
     const tradeToken1 = (await tokenFactory.deploy("Trade Token 1", "TT1", 18)) as TestERC20
 
+    const nftFactory = await ethers.getContractFactory("TestERC721");
+    const testNFT  = (await nftFactory.deploy("TestNFT", "TNFT")) as TestERC721
 
     return {
         limitRanger,
@@ -47,7 +50,8 @@ async function limitRangerFixture([wallet, admin, protocolReceiver]: Wallet[]): 
         mockPosManager,
         mockV3Factory,
         wethContract,
-        mockPool
+        mockPool,
+        testNFT,
     }
 }
 
@@ -63,6 +67,7 @@ describe("LimitRanger", () => {
     let mockV3Factory: Contract;
     let wethContract: Contract;
     let mockPool: Contract;
+    let testNFT: TestERC721;
 
 
     let loadFixture: ReturnType<typeof waffle.createFixtureLoader>;
@@ -81,7 +86,8 @@ describe("LimitRanger", () => {
             mockPosManager,
             mockV3Factory,
             wethContract,
-            mockPool
+            mockPool,
+            testNFT,
         } = await loadFixture(limitRangerFixture));
     });
 
@@ -371,9 +377,25 @@ describe("LimitRanger", () => {
                 await expect(limitRanger.connect(botAccount).retrieveNFT(nftTokenId)).revertedWith('Operation only allowed for owner of position');
             });
         });
+
+        describe("onERC721Received", async () => {
+
+            beforeEach(async () => {
+            await mockV3Factory.mock.getPool.returns(mockPool.address);
+            await mockPool.mock.slot0.returns(0, initialPoolTick, 0, 0, 0, 0, true);
+                await preparePositionToken0()
+            });
+
+            it("fails if called by someone other than the uniswap positionManager contract", async () => {
+                expect((await limitRanger.getPositionInfo(nftTokenId)).owner).to.be.equal(enduser1.address);
+                await testNFT.connect(wallet).mint(wallet.address, nftTokenId);
+                await expect(testNFT.connect(wallet)["safeTransferFrom(address,address,uint256)"](wallet.address, limitRanger.address, nftTokenId)).revertedWith('Only position manager');
+                expect((await limitRanger.getPositionInfo(nftTokenId)).owner).to.be.equal(enduser1.address);                
+            })
+        });
     });
     
-    describe("admin functinos", async () => {
+    describe("admin functions", async () => {
         describe("setMinimumFee", async () => {
             it("sets minimum fee", async () => {
                 const newMinimumFee = 50;
