@@ -1,8 +1,6 @@
 import { expect, use } from "chai"
-import { deployContract, deployMockContract, MockContract, MockProvider, solidity } from "ethereum-waffle";
-import { Contract, ContractTransaction, providers, utils, Wallet } from "ethers"
-
-import { INonfungiblePositionManager } from "../typechain-types/@uniswap/v3-periphery/contracts/interfaces"
+import { deployMockContract, solidity } from "ethereum-waffle";
+import { Contract, Wallet } from "ethers"
 import IUniswapV3Factory from "../artifacts/@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol/IUniswapV3Factory.json"
 import IUniswapV3Pool from "../artifacts/@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json"
 import PosManagerAbi from "../artifacts/@uniswap/v3-periphery/contracts/interfaces/INonfungiblePositionManager.sol/INonfungiblePositionManager.json"
