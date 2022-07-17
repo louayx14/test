@@ -460,8 +460,8 @@ contract LimitRanger is IERC721Receiver {
 
     // @dev Implementing `onERC721Received` so this contract can receive custody of erc721 tokens. Stores information about the sender in positionInfos structure.
     function onERC721Received(
-        address operator,
         address,
+        address operator,
         uint256 tokenId,
         bytes calldata
     ) external override onlyNonfungiblePositionManager returns (bytes4) {   

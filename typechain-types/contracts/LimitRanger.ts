@@ -441,8 +441,8 @@ export interface LimitRanger extends BaseContract {
     nonfungiblePositionManager(overrides?: CallOverrides): Promise<[string]>;
 
     onERC721Received(
+      arg0: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
       arg3: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -534,8 +534,8 @@ export interface LimitRanger extends BaseContract {
   nonfungiblePositionManager(overrides?: CallOverrides): Promise<string>;
 
   onERC721Received(
+    arg0: PromiseOrValue<string>,
     operator: PromiseOrValue<string>,
-    arg1: PromiseOrValue<string>,
     tokenId: PromiseOrValue<BigNumberish>,
     arg3: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -627,8 +627,8 @@ export interface LimitRanger extends BaseContract {
     nonfungiblePositionManager(overrides?: CallOverrides): Promise<string>;
 
     onERC721Received(
+      arg0: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
       arg3: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -770,8 +770,8 @@ export interface LimitRanger extends BaseContract {
     nonfungiblePositionManager(overrides?: CallOverrides): Promise<BigNumber>;
 
     onERC721Received(
+      arg0: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
       arg3: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -858,8 +858,8 @@ export interface LimitRanger extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     onERC721Received(
+      arg0: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
       arg3: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
