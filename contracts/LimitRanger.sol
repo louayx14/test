@@ -111,14 +111,14 @@ contract LimitRanger is IERC721Receiver {
         bool unwrapToNative;
     }
 
-    /// @dev positionInfos[tokenId] => PositionInfo Lookup of position infos by uniswap tokenId
+    /// @dev positionInfos[tokenId] => PositionInfo - Lookup of position infos by uniswap tokenId
     mapping(uint256 => PositionInfo) public positionInfos;
 
-    /// @dev ownedTokens[ownerAddress] = tokenIds[] Lookup of owned positions (uniswap tokenIds) by owner address.
+    /// @dev ownedTokens[ownerAddress] => tokenIds[] - Lookup of owned positions (uniswap tokenIds) by owner address.
     ///      Owned token Ids are stored in an array.
     mapping(address => uint256[]) internal ownedTokens;
 
-    /// @dev ownedTokensIndex[tokenId] = index Lookup of the index of a position in the ownedTokens array.
+    /// @dev ownedTokensIndex[tokenId] => index - Lookup of the index of a position in the ownedTokens array.
     mapping(uint256 => uint256) internal ownedTokensIndex;
 
     /// Create instance of contract
