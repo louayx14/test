@@ -13,7 +13,7 @@ An additional advantage is that while your Uniswap position is in range it accru
 
 To mint a new position the user calls the mintNewPosition function of the LimitRanger smart contract. 
 The contract checks if the desired selling range is above the current price (using Uniswap ticks) and then opens a new liquidity provider position in the matching Uniswap V3 liquidity pool by calling 'mint' on Uniswap's NonfungiblePositionManager contract. Uniswap creates an NFT for the liquidity position which is kept in the LimitRanger smart contract which stores the corresponding data for the LimitRanger position in its local storage (mappings: positionInfos, ownedTokens and ownedTokensIndex). The id of the Uniswap liquidity position NFT is also used as the identifier of a position in the LimitRanger contract.
-The tick corresponding to the upper price of the range is stored as sellTarget in the positionInfo.
+The tick corresponding to the upper price of the range is stored as sellTarget in the positionInfo. Depending on if token0 or token1 is being sold this can be the lower or the upper tick of the price range.
 
 The mintNewPosition function takes the MintParams struct as parameter which has the following variables:
 
@@ -26,7 +26,7 @@ The mintNewPosition function takes the MintParams struct as parameter which has 
 | lowerTick | int24 | Lower tick of the Uniswap V3 liquidity position which is to be created |
 | upperTick | int24 | Upper tick of the Uniswap V3 liquidity position which is to be created |
 | poolFee | uint24 | Pool fee to be used for the Uniswap V3 liquidity position which is to be created  |
-| deadline | uint256 | Deadline after which the opening of the position which fail |
+| deadline | uint256 | Deadline after which the opening of the position will fail |
 | protocolFee | uint16 | Protocol fee for this position. Needs to be equal or greater than the current minimumPoolFee set in the LimitRanger contract. |
 | unwrapToNative | bool | If one of the tokens is a native token (e.g. ether) and this is set to true the token will be unwrapped when the position is closed or cancelled. |
 
