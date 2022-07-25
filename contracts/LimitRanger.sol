@@ -5,7 +5,6 @@ pragma abicoder v2;
 import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
 import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol';
 import '@uniswap/v3-core/contracts/libraries/TickMath.sol';
-import '@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol';
 import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/math/SafeMath.sol';
@@ -18,7 +17,7 @@ import "hardhat/console.sol";
 /// @title A contract which allows automated range orders for Uniswap by opening a liquidity position 
 ///        and allowing anyone to close the position once the selling price is reached and returning the assets
 ///        to the original owner - minus a protocol fee (this is usually done by a bot). 
-contract LimitRanger is IERC721Receiver {
+contract LimitRanger {
 
     /// Uniswap smart contracts
     INonfungiblePositionManager public immutable nonfungiblePositionManager;
@@ -164,11 +163,6 @@ contract LimitRanger is IERC721Receiver {
     /// Modifier which checks if new deposits are currently allowed
     modifier onlyDepositsActive() {
         require(depositsActive, 'Deposits are currently disabled');
-        _;
-    }
-
-    modifier onlyNonfungiblePositionManager(){
-        require(msg.sender == address(nonfungiblePositionManager), "Only position manager");
         _;
     }
 
@@ -457,17 +451,6 @@ contract LimitRanger is IERC721Receiver {
         }
     }
 
-
-    // @dev Implementing `onERC721Received` so this contract can receive custody of erc721 tokens. Stores information about the sender in positionInfos structure.
-    function onERC721Received(
-        address,
-        address operator,
-        uint256 tokenId,
-        bytes calldata
-    ) external override onlyNonfungiblePositionManager returns (bytes4) {   
-        _storePositionInfo(tokenId, MAX_TICK, true, operator, currentMinFee, false);     
-        return this.onERC721Received.selector;
-    }
 
     // @dev Escape hatch for any eth stranded in the contract. Only callable by operator.
     function retrieveEth() external onlyOperator returns(bool){
