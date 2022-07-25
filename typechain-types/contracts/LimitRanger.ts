@@ -99,8 +99,9 @@ export interface LimitRangerInterface extends utils.Interface {
     "getPositionInfo(uint256)": FunctionFragment;
     "mintNewPosition((address,address,uint256,uint256,int24,int24,uint24,uint256,uint16,bool))": FunctionFragment;
     "nonfungiblePositionManager()": FunctionFragment;
-    "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
     "positionInfos(uint256)": FunctionFragment;
+    "protocolFeeReceiver()": FunctionFragment;
+    "protocolOperator()": FunctionFragment;
     "retrieveERC20(address)": FunctionFragment;
     "retrieveEth()": FunctionFragment;
     "retrieveNFT(uint256)": FunctionFragment;
@@ -123,8 +124,9 @@ export interface LimitRangerInterface extends utils.Interface {
       | "getPositionInfo"
       | "mintNewPosition"
       | "nonfungiblePositionManager"
-      | "onERC721Received"
       | "positionInfos"
+      | "protocolFeeReceiver"
+      | "protocolOperator"
       | "retrieveERC20"
       | "retrieveEth"
       | "retrieveNFT"
@@ -170,17 +172,16 @@ export interface LimitRangerInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "onERC721Received",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>
-    ]
-  ): string;
-  encodeFunctionData(
     functionFragment: "positionInfos",
     values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "protocolFeeReceiver",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "protocolOperator",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "retrieveERC20",
@@ -247,11 +248,15 @@ export interface LimitRangerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "onERC721Received",
+    functionFragment: "positionInfos",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "positionInfos",
+    functionFragment: "protocolFeeReceiver",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "protocolOperator",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -440,14 +445,6 @@ export interface LimitRanger extends BaseContract {
 
     nonfungiblePositionManager(overrides?: CallOverrides): Promise<[string]>;
 
-    onERC721Received(
-      arg0: PromiseOrValue<string>,
-      operator: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     positionInfos(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -460,6 +457,10 @@ export interface LimitRanger extends BaseContract {
         unwrapToNative: boolean;
       }
     >;
+
+    protocolFeeReceiver(overrides?: CallOverrides): Promise<[string]>;
+
+    protocolOperator(overrides?: CallOverrides): Promise<[string]>;
 
     retrieveERC20(
       token: PromiseOrValue<string>,
@@ -533,14 +534,6 @@ export interface LimitRanger extends BaseContract {
 
   nonfungiblePositionManager(overrides?: CallOverrides): Promise<string>;
 
-  onERC721Received(
-    arg0: PromiseOrValue<string>,
-    operator: PromiseOrValue<string>,
-    tokenId: PromiseOrValue<BigNumberish>,
-    arg3: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   positionInfos(
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -553,6 +546,10 @@ export interface LimitRanger extends BaseContract {
       unwrapToNative: boolean;
     }
   >;
+
+  protocolFeeReceiver(overrides?: CallOverrides): Promise<string>;
+
+  protocolOperator(overrides?: CallOverrides): Promise<string>;
 
   retrieveERC20(
     token: PromiseOrValue<string>,
@@ -626,14 +623,6 @@ export interface LimitRanger extends BaseContract {
 
     nonfungiblePositionManager(overrides?: CallOverrides): Promise<string>;
 
-    onERC721Received(
-      arg0: PromiseOrValue<string>,
-      operator: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
     positionInfos(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -646,6 +635,10 @@ export interface LimitRanger extends BaseContract {
         unwrapToNative: boolean;
       }
     >;
+
+    protocolFeeReceiver(overrides?: CallOverrides): Promise<string>;
+
+    protocolOperator(overrides?: CallOverrides): Promise<string>;
 
     retrieveERC20(
       token: PromiseOrValue<string>,
@@ -769,18 +762,14 @@ export interface LimitRanger extends BaseContract {
 
     nonfungiblePositionManager(overrides?: CallOverrides): Promise<BigNumber>;
 
-    onERC721Received(
-      arg0: PromiseOrValue<string>,
-      operator: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     positionInfos(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    protocolFeeReceiver(overrides?: CallOverrides): Promise<BigNumber>;
+
+    protocolOperator(overrides?: CallOverrides): Promise<BigNumber>;
 
     retrieveERC20(
       token: PromiseOrValue<string>,
@@ -857,18 +846,16 @@ export interface LimitRanger extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    onERC721Received(
-      arg0: PromiseOrValue<string>,
-      operator: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     positionInfos(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    protocolFeeReceiver(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    protocolOperator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     retrieveERC20(
       token: PromiseOrValue<string>,

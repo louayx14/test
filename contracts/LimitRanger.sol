@@ -30,10 +30,10 @@ contract LimitRanger {
     IERC721 public immutable uniNft;
 
     /// @dev Address of the protocol operator who has administrative rights
-    address protocolOperator;
+    address public protocolOperator;
 
     /// @dev Address where protocol fees are sent to
-    address payable protocolFeeReceiver;
+    address payable public protocolFeeReceiver;
     
     /// current fee in per thousand
     uint16 public currentMinFee;
@@ -173,7 +173,7 @@ contract LimitRanger {
     /// Sets the address to which protocol fees are sent
     /// @param receiver The new protocol fee receiver address.
     function setProtocolFeeReceiver(address receiver) external onlyOperator {        
-        require(address(0) != receiver);
+        require(address(0) != receiver, '0x0 address not allowed');
         protocolFeeReceiver = payable(receiver);
         emit FeeReceiverSet(receiver);
     }

@@ -55,6 +55,7 @@ async function limitRangerFixture([wallet, admin, protocolReceiver]: Wallet[]): 
 
 describe("LimitRanger", () => {
     const DUMMY_ADDRESS = "0xA000000000000000000000000000000000000000"
+    const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
     let wallet: Wallet, admin: Wallet, protocolReceiver: Wallet, enduser1: Wallet, botAccount: Wallet;
 
@@ -233,6 +234,8 @@ describe("LimitRanger", () => {
         let protocolFeeToCollectSellingToken = 10;
         let protocolFeeToCollectBuyingToken = 100;
         async function preparePositionToken0() {
+            await mockV3Factory.mock.getPool.returns(mockPool.address);
+            await mockPool.mock.slot0.returns(0, initialPoolTick, 0, 0, 0, 0, true);
             await tradeToken0.mint(enduser1.address, mintAmount);
             await mockPosManager.mock.mint.returns(nftTokenId, positionLiquidity, poolFee, 0);
             mintParams = {
@@ -293,10 +296,6 @@ describe("LimitRanger", () => {
         describe("stopPosition", async () => {
 
             beforeEach(async () => {
-
-                // await tradeToken1.mint(enduser1.address, mintAmount);
-                await mockV3Factory.mock.getPool.returns(mockPool.address);
-                await mockPool.mock.slot0.returns(0, initialPoolTick, 0, 0, 0, 0, true);
                 await preparePositionToken0()
             });
 
@@ -342,8 +341,6 @@ describe("LimitRanger", () => {
         describe("cancelPosition", async () => {
 
             beforeEach(async () => {
-                await mockV3Factory.mock.getPool.returns(mockPool.address);
-                await mockPool.mock.slot0.returns(0, initialPoolTick, 0, 0, 0, 0, true);
                 await preparePositionToken0()
             });
 
@@ -360,8 +357,6 @@ describe("LimitRanger", () => {
         describe("removePosition", async () => {
 
             beforeEach(async () => {
-                await mockV3Factory.mock.getPool.returns(mockPool.address);
-                await mockPool.mock.slot0.returns(0, initialPoolTick, 0, 0, 0, 0, true);
                 await preparePositionToken0()
             });
 
@@ -376,20 +371,40 @@ describe("LimitRanger", () => {
             });
         });
 
-        describe("onERC721Received", async () => {
+        // describe("onERC721Received", async () => {
 
+        //     beforeEach(async () => {
+        //         await mockV3Factory.mock.getPool.returns(mockPool.address);
+        //         await mockPool.mock.slot0.returns(0, initialPoolTick, 0, 0, 0, 0, true);
+        //         await preparePositionToken0()
+        //     });
+
+        //     it("fails if called by someone other than the uniswap positionManager contract", async () => {
+        //         expect((await limitRanger.getPositionInfo(nftTokenId)).owner).to.be.equal(enduser1.address);
+        //         await testNFT.connect(wallet).mint(wallet.address, nftTokenId);
+        //         await expect(testNFT.connect(wallet)["safeTransferFrom(address,address,uint256)"](wallet.address, limitRanger.address, nftTokenId)).revertedWith('Only position manager');
+        //         expect((await limitRanger.getPositionInfo(nftTokenId)).owner).to.be.equal(enduser1.address);
+        //     })
+        // });
+
+        describe("getOwner", async () => {
             beforeEach(async () => {
-                await mockV3Factory.mock.getPool.returns(mockPool.address);
-                await mockPool.mock.slot0.returns(0, initialPoolTick, 0, 0, 0, 0, true);
                 await preparePositionToken0()
             });
 
-            it("fails if called by someone other than the uniswap positionManager contract", async () => {
+            it("returns current owner of position", async () => {
+                expect( await limitRanger.getOwner(nftTokenId)).to.be.equal(enduser1.address);
+            });
+        });
+
+        describe("getPositionInfo", async () => {
+            beforeEach(async () => {
+                await preparePositionToken0()
+            });
+
+            it("returns information for correct position", async () => {
                 expect((await limitRanger.getPositionInfo(nftTokenId)).owner).to.be.equal(enduser1.address);
-                await testNFT.connect(wallet).mint(wallet.address, nftTokenId);
-                await expect(testNFT.connect(wallet)["safeTransferFrom(address,address,uint256)"](wallet.address, limitRanger.address, nftTokenId)).revertedWith('Only position manager');
-                expect((await limitRanger.getPositionInfo(nftTokenId)).owner).to.be.equal(enduser1.address);
-            })
+            });
         });
     });
 
@@ -406,7 +421,7 @@ describe("LimitRanger", () => {
             });
         });
 
-        describe("setMinimumFee", async () => {
+        describe("setDepositsActive", async () => {
             it("sets deposits inactive", async () => {
                 await limitRanger.connect(wallet).setDepositsActive(false);
                 expect(await limitRanger.depositsActive()).to.be.equal(false);
@@ -417,6 +432,19 @@ describe("LimitRanger", () => {
             });
             it("fails if not called by operator", async () => {
                 await expect(limitRanger.connect(enduser1).setDepositsActive(false)).revertedWith('Operaton only allowed for operator of contract');
+            });
+        });
+
+        describe("setProtocolFeeReceiver", async () => {
+            it("sets protocol fee receiver", async () => {
+                await limitRanger.connect(wallet).setProtocolFeeReceiver(enduser1.address);
+                expect(await limitRanger.protocolFeeReceiver()).to.be.equal(enduser1.address);
+            });        
+            it("fails if not called by operator", async () => {
+                await expect(limitRanger.connect(enduser1).setProtocolFeeReceiver(enduser1.address)).revertedWith('Operaton only allowed for operator of contract');
+            });
+            it("fails if called with zero address", async () => {
+                await expect(limitRanger.connect(wallet).setProtocolFeeReceiver(ZERO_ADDRESS)).revertedWith('0x0 address not allowed');
             });
         });
 
