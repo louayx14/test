@@ -318,6 +318,17 @@ describe("LimitRanger", () => {
                 expect(await tradeToken1.balanceOf(protocolReceiver.address)).to.be.equal(protocolFeeToCollectBuyingToken);
             });
 
+            it("pays out position reward fees to address closing position", async () => {
+                await limitRanger.connect(wallet).setStopPositionReward(20);
+                const rewardSellingToken = protocolFeeToCollectSellingToken * 0.2;
+                const rewardBuyingToken = protocolFeeToCollectBuyingToken * 0.2;
+                await limitRanger.connect(botAccount).stopPosition(nftTokenId);
+                expect(await tradeToken0.balanceOf(protocolReceiver.address)).to.be.equal(protocolFeeToCollectSellingToken - rewardSellingToken);
+                expect(await tradeToken1.balanceOf(protocolReceiver.address)).to.be.equal(protocolFeeToCollectBuyingToken - rewardBuyingToken);
+                expect(await tradeToken0.balanceOf(botAccount.address)).to.be.equal(rewardSellingToken);
+                expect(await tradeToken1.balanceOf(botAccount.address)).to.be.equal(rewardBuyingToken);
+            });
+
             it("emits ClosePosition event", async () => {
                 await expect(limitRanger.connect(botAccount).stopPosition(nftTokenId))
                     .to.emit(limitRanger, "ClosePosition")
@@ -418,6 +429,22 @@ describe("LimitRanger", () => {
             it("fails if not called by operator", async () => {
                 const newMinimumFee = 50;
                 await expect(limitRanger.connect(enduser1).setMinimumFee(newMinimumFee)).revertedWith('Operaton only allowed for operator of contract');
+            });
+        });
+
+        describe("setStopPositionReward", async () => {
+            it("sets the position reward", async () => {
+                const newRewardPct = 50;
+                await limitRanger.connect(wallet).setStopPositionReward(newRewardPct);
+                expect(await limitRanger.currentStopPositionReward()).to.be.equal(newRewardPct);
+            });
+            it("fails if not called by operator", async () => {
+                const newRewardPct = 50;
+                await expect(limitRanger.connect(enduser1).setStopPositionReward(newRewardPct)).revertedWith('Operaton only allowed for operator of contract');
+            });
+            it("fails if reward value greater than 100", async () => {
+                const newRewardPct = 101;
+                await expect(limitRanger.connect(wallet).setStopPositionReward(newRewardPct)).revertedWith('reward >100 not allowed');
             });
         });
 

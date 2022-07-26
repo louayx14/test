@@ -38,6 +38,9 @@ contract LimitRanger {
     /// current fee in per thousand
     uint16 public currentMinFee;
 
+    /// current stop position reward in percentage of fee (payed to the address which triggers a successful close position)
+    uint8 public currentStopPositionReward;
+
     /// switch to disable opening of new positions
     bool public depositsActive;
 
@@ -80,6 +83,10 @@ contract LimitRanger {
     /// Event for when deposits are activated/disabled.
     /// @param active If true deposits are active, if false deposits are disabled.
     event DepositsActiveSet(bool active);
+
+    /// Event for when a new reward percentage is set for closing positions.
+    /// @param reward The new reward as percentage of fees collected.
+    event StopPositionRewardSet(uint8 reward);
 
     /// @dev Information about a position
     /// @param owner The address which opened the position
@@ -136,6 +143,7 @@ contract LimitRanger {
         protocolOperator = msg.sender;
         protocolFeeReceiver = payable(msg.sender);
         currentMinFee = 1;
+        currentStopPositionReward = 0;
         depositsActive = true;
     }
 
@@ -190,6 +198,14 @@ contract LimitRanger {
     function setDepositsActive(bool active) external onlyOperator {
         depositsActive = active;
         emit DepositsActiveSet(active);
+    }
+
+    /// Sets new reward percentage for successfully closing positions. 
+    /// @param reward The new reward as percentage of fees collected.
+    function setStopPositionReward(uint8 reward) external onlyOperator {
+        require(reward <= 100, 'reward >100 not allowed');
+        currentStopPositionReward = reward;
+        emit StopPositionRewardSet(reward);
     }
 
 
@@ -443,10 +459,19 @@ contract LimitRanger {
             }
         }
         if(fee > 0) {
+            // calculate reward for address who closed position
+            uint256 reward = (fee * currentStopPositionReward)/100;
             if (unwrapToNative && token == address(weth9)) {
-                TransferHelper.safeTransferETH(protocolFeeReceiver, fee);
+                TransferHelper.safeTransferETH(protocolFeeReceiver, fee - reward);
             } else {
-                TransferHelper.safeTransfer(token, protocolFeeReceiver, fee);
+                TransferHelper.safeTransfer(token, protocolFeeReceiver, fee - reward);
+            }
+            if(reward > 0) {
+                if (unwrapToNative && token == address(weth9)) {
+                    TransferHelper.safeTransferETH(msg.sender, reward);
+                } else {
+                    TransferHelper.safeTransfer(token, msg.sender, reward);
+                }    
             }
         }
     }

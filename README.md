@@ -7,7 +7,7 @@ A range order is an approximation of a limit order ([Range order description by 
 
 This is where LimitRanger comes in: Our smart contract creates a liquidity position for you and allows anyone to close it once the upper end of the range is reached - with the assets of course being returned to your wallet. We run a program which looks for such positions and automatically closes them. As long as the target price is not reached no one can interfere with your position but you (with the wallet that opened the position). You can cancel your order (getting paid out any assets currently in the position) or transfer the NFT representing the Uniswap position to your wallet at any time.
 
-An additional advantage is that while your Uniswap position is in range it accrues fees which are also paid out to you once the position is closed. You also don’t have to pay the swap fee on Uniswap. LimitRanger however takes a cut of the traded volume which is also used to pay for the transaction fees when our program closes positions for you.
+An additional advantage is that while your Uniswap position is in range it accrues fees which are also paid out to you once the position is closed. You also don’t have to pay the swap fee on Uniswap. LimitRanger however takes a cut of the traded volume which is also used to pay for the transaction fees when our program closes positions for you. The contract can be configured to paz out a percentage of the fee to the wallet which successfully triggered the closing of the position. This is to incentivize other players to monitor and close eligble positions. 
 
 ## Minting a new position
 
