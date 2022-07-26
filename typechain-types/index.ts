@@ -68,3 +68,5 @@ export type { TestERC20 } from "./contracts/test/TestERC20";
 export { TestERC20__factory } from "./factories/contracts/test/TestERC20__factory";
 export type { TestERC721 } from "./contracts/test/TestERC721";
 export { TestERC721__factory } from "./factories/contracts/test/TestERC721__factory";
+export type { TestWETH9 } from "./contracts/test/TestWETH9";
+export { TestWETH9__factory } from "./factories/contracts/test/TestWETH9__factory";

@@ -93,6 +93,7 @@ export interface LimitRangerInterface extends utils.Interface {
   functions: {
     "cancelPosition(uint256)": FunctionFragment;
     "currentMinFee()": FunctionFragment;
+    "currentStopPositionReward()": FunctionFragment;
     "depositsActive()": FunctionFragment;
     "getOwnedPositions(address)": FunctionFragment;
     "getOwner(uint256)": FunctionFragment;
@@ -108,6 +109,7 @@ export interface LimitRangerInterface extends utils.Interface {
     "setDepositsActive(bool)": FunctionFragment;
     "setMinimumFee(uint16)": FunctionFragment;
     "setProtocolFeeReceiver(address)": FunctionFragment;
+    "setStopPositionReward(uint8)": FunctionFragment;
     "stopPosition(uint256)": FunctionFragment;
     "uniNft()": FunctionFragment;
     "uniswapV3Factory()": FunctionFragment;
@@ -118,6 +120,7 @@ export interface LimitRangerInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "cancelPosition"
       | "currentMinFee"
+      | "currentStopPositionReward"
       | "depositsActive"
       | "getOwnedPositions"
       | "getOwner"
@@ -133,6 +136,7 @@ export interface LimitRangerInterface extends utils.Interface {
       | "setDepositsActive"
       | "setMinimumFee"
       | "setProtocolFeeReceiver"
+      | "setStopPositionReward"
       | "stopPosition"
       | "uniNft"
       | "uniswapV3Factory"
@@ -145,6 +149,10 @@ export interface LimitRangerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "currentMinFee",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "currentStopPositionReward",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -208,6 +216,10 @@ export interface LimitRangerInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "setStopPositionReward",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "stopPosition",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -224,6 +236,10 @@ export interface LimitRangerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "currentMinFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "currentStopPositionReward",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -284,6 +300,10 @@ export interface LimitRangerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setStopPositionReward",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "stopPosition",
     data: BytesLike
   ): Result;
@@ -302,6 +322,7 @@ export interface LimitRangerInterface extends utils.Interface {
     "FeeReceiverSet(address)": EventFragment;
     "MinimumFeeSet(uint16)": EventFragment;
     "RemovePosition(uint256,address)": EventFragment;
+    "StopPositionRewardSet(uint8)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "AddPosition"): EventFragment;
@@ -311,6 +332,7 @@ export interface LimitRangerInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "FeeReceiverSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MinimumFeeSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RemovePosition"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "StopPositionRewardSet"): EventFragment;
 }
 
 export interface AddPositionEventObject {
@@ -387,6 +409,17 @@ export type RemovePositionEvent = TypedEvent<
 
 export type RemovePositionEventFilter = TypedEventFilter<RemovePositionEvent>;
 
+export interface StopPositionRewardSetEventObject {
+  reward: number;
+}
+export type StopPositionRewardSetEvent = TypedEvent<
+  [number],
+  StopPositionRewardSetEventObject
+>;
+
+export type StopPositionRewardSetEventFilter =
+  TypedEventFilter<StopPositionRewardSetEvent>;
+
 export interface LimitRanger extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
@@ -420,6 +453,8 @@ export interface LimitRanger extends BaseContract {
     ): Promise<ContractTransaction>;
 
     currentMinFee(overrides?: CallOverrides): Promise<[number]>;
+
+    currentStopPositionReward(overrides?: CallOverrides): Promise<[number]>;
 
     depositsActive(overrides?: CallOverrides): Promise<[boolean]>;
 
@@ -491,6 +526,11 @@ export interface LimitRanger extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    setStopPositionReward(
+      reward: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     stopPosition(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -509,6 +549,8 @@ export interface LimitRanger extends BaseContract {
   ): Promise<ContractTransaction>;
 
   currentMinFee(overrides?: CallOverrides): Promise<number>;
+
+  currentStopPositionReward(overrides?: CallOverrides): Promise<number>;
 
   depositsActive(overrides?: CallOverrides): Promise<boolean>;
 
@@ -580,6 +622,11 @@ export interface LimitRanger extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  setStopPositionReward(
+    reward: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   stopPosition(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -598,6 +645,8 @@ export interface LimitRanger extends BaseContract {
     ): Promise<boolean>;
 
     currentMinFee(overrides?: CallOverrides): Promise<number>;
+
+    currentStopPositionReward(overrides?: CallOverrides): Promise<number>;
 
     depositsActive(overrides?: CallOverrides): Promise<boolean>;
 
@@ -667,6 +716,11 @@ export interface LimitRanger extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setStopPositionReward(
+      reward: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     stopPosition(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -728,6 +782,11 @@ export interface LimitRanger extends BaseContract {
       token?: null,
       owner?: PromiseOrValue<string> | null
     ): RemovePositionEventFilter;
+
+    "StopPositionRewardSet(uint8)"(
+      reward?: null
+    ): StopPositionRewardSetEventFilter;
+    StopPositionRewardSet(reward?: null): StopPositionRewardSetEventFilter;
   };
 
   estimateGas: {
@@ -737,6 +796,8 @@ export interface LimitRanger extends BaseContract {
     ): Promise<BigNumber>;
 
     currentMinFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    currentStopPositionReward(overrides?: CallOverrides): Promise<BigNumber>;
 
     depositsActive(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -800,6 +861,11 @@ export interface LimitRanger extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    setStopPositionReward(
+      reward: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     stopPosition(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -819,6 +885,10 @@ export interface LimitRanger extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     currentMinFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    currentStopPositionReward(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     depositsActive(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -883,6 +953,11 @@ export interface LimitRanger extends BaseContract {
 
     setProtocolFeeReceiver(
       receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setStopPositionReward(
+      reward: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

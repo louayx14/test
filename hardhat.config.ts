@@ -17,18 +17,25 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || ""
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
- const config: HardhatUserConfig = {
+const config: HardhatUserConfig = {
   solidity: {
-    version: "0.7.6",
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 1000,
-        details: {
-          yul: true
-        },
+    compilers: [
+      {
+        version: "0.4.18"
       },
-    }
+      {
+        version: "0.7.6",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000,
+            details: {
+              yul: true
+            },
+          },
+        }
+      }
+    ]
   },
   networks: {
     rinkeby: {
@@ -54,8 +61,8 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || ""
         auto: true,
         //interval: 6000
       }
-    }  
-  }, 
+    }
+  },
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
