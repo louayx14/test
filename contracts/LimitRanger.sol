@@ -80,6 +80,10 @@ contract LimitRanger {
     /// @param newFeeReceiver The address which receives all protocol fees.
     event FeeReceiverSet(address newFeeReceiver);
 
+    /// Event for when a new address for the protocol operator is set.
+    /// @param newOperator The address of the new protocol operator.
+    event OperatorSet(address newOperator);
+
     /// Event for when deposits are activated/disabled.
     /// @param active If true deposits are active, if false deposits are disabled.
     event DepositsActiveSet(bool active);
@@ -184,6 +188,14 @@ contract LimitRanger {
         require(address(0) != receiver, '0x0 address not allowed');
         protocolFeeReceiver = payable(receiver);
         emit FeeReceiverSet(receiver);
+    }
+
+    /// Sets the address of the new protocol operator
+    /// @param newOperator The new protocol operator address.
+    function setProtocolOperator(address newOperator) external onlyOperator {        
+        require(address(0) != newOperator, '0x0 address not allowed');
+        protocolOperator = newOperator;
+        emit OperatorSet(newOperator);
     }
 
     /// Sets the minimumb protocol fee for new positions in per thousand.

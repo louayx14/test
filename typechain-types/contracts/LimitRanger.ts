@@ -109,6 +109,7 @@ export interface LimitRangerInterface extends utils.Interface {
     "setDepositsActive(bool)": FunctionFragment;
     "setMinimumFee(uint16)": FunctionFragment;
     "setProtocolFeeReceiver(address)": FunctionFragment;
+    "setProtocolOperator(address)": FunctionFragment;
     "setStopPositionReward(uint8)": FunctionFragment;
     "stopPosition(uint256)": FunctionFragment;
     "uniNft()": FunctionFragment;
@@ -136,6 +137,7 @@ export interface LimitRangerInterface extends utils.Interface {
       | "setDepositsActive"
       | "setMinimumFee"
       | "setProtocolFeeReceiver"
+      | "setProtocolOperator"
       | "setStopPositionReward"
       | "stopPosition"
       | "uniNft"
@@ -213,6 +215,10 @@ export interface LimitRangerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setProtocolFeeReceiver",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setProtocolOperator",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -300,6 +306,10 @@ export interface LimitRangerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setProtocolOperator",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setStopPositionReward",
     data: BytesLike
   ): Result;
@@ -321,6 +331,7 @@ export interface LimitRangerInterface extends utils.Interface {
     "DepositsActiveSet(bool)": EventFragment;
     "FeeReceiverSet(address)": EventFragment;
     "MinimumFeeSet(uint16)": EventFragment;
+    "OperatorSet(address)": EventFragment;
     "RemovePosition(uint256,address)": EventFragment;
     "StopPositionRewardSet(uint8)": EventFragment;
   };
@@ -331,6 +342,7 @@ export interface LimitRangerInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "DepositsActiveSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FeeReceiverSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MinimumFeeSet"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OperatorSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RemovePosition"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "StopPositionRewardSet"): EventFragment;
 }
@@ -397,6 +409,13 @@ export interface MinimumFeeSetEventObject {
 export type MinimumFeeSetEvent = TypedEvent<[number], MinimumFeeSetEventObject>;
 
 export type MinimumFeeSetEventFilter = TypedEventFilter<MinimumFeeSetEvent>;
+
+export interface OperatorSetEventObject {
+  newOperator: string;
+}
+export type OperatorSetEvent = TypedEvent<[string], OperatorSetEventObject>;
+
+export type OperatorSetEventFilter = TypedEventFilter<OperatorSetEvent>;
 
 export interface RemovePositionEventObject {
   token: BigNumber;
@@ -526,6 +545,11 @@ export interface LimitRanger extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    setProtocolOperator(
+      newOperator: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     setStopPositionReward(
       reward: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -619,6 +643,11 @@ export interface LimitRanger extends BaseContract {
 
   setProtocolFeeReceiver(
     receiver: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setProtocolOperator(
+    newOperator: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -716,6 +745,11 @@ export interface LimitRanger extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setProtocolOperator(
+      newOperator: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setStopPositionReward(
       reward: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -773,6 +807,9 @@ export interface LimitRanger extends BaseContract {
 
     "MinimumFeeSet(uint16)"(newFee?: null): MinimumFeeSetEventFilter;
     MinimumFeeSet(newFee?: null): MinimumFeeSetEventFilter;
+
+    "OperatorSet(address)"(newOperator?: null): OperatorSetEventFilter;
+    OperatorSet(newOperator?: null): OperatorSetEventFilter;
 
     "RemovePosition(uint256,address)"(
       token?: null,
@@ -858,6 +895,11 @@ export interface LimitRanger extends BaseContract {
 
     setProtocolFeeReceiver(
       receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setProtocolOperator(
+      newOperator: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -953,6 +995,11 @@ export interface LimitRanger extends BaseContract {
 
     setProtocolFeeReceiver(
       receiver: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setProtocolOperator(
+      newOperator: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

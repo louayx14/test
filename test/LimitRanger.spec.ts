@@ -495,6 +495,25 @@ describe("LimitRanger", () => {
             });
         });
 
+        describe("setProtocolOperator", async () => {
+            it("sets protocol operator", async () => {
+                await limitRanger.connect(wallet).setProtocolOperator(enduser1.address);
+                expect(await limitRanger.protocolOperator()).to.be.equal(enduser1.address);
+            });
+            it("allows new address to use admin functions", async () => {
+                await limitRanger.connect(wallet).setProtocolOperator(enduser1.address);
+                await expect(limitRanger.connect(wallet).setProtocolOperator(wallet.address)).revertedWith('Operaton only allowed for operator of contract');
+                await limitRanger.connect(enduser1).setProtocolOperator(botAccount.address);
+                expect(await limitRanger.protocolOperator()).to.be.equal(botAccount.address);
+            });         
+            it("fails if not called by operator", async () => {
+                await expect(limitRanger.connect(enduser1).setProtocolOperator(enduser1.address)).revertedWith('Operaton only allowed for operator of contract');
+            });
+            it("fails if called with zero address", async () => {
+                await expect(limitRanger.connect(wallet).setProtocolOperator(ZERO_ADDRESS)).revertedWith('0x0 address not allowed');
+            });
+        });
+
         describe("setProtocolFeeReceiver", async () => {
             it("sets protocol fee receiver", async () => {
                 await limitRanger.connect(wallet).setProtocolFeeReceiver(enduser1.address);

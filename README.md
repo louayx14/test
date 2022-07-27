@@ -9,6 +9,15 @@ This is where LimitRanger comes in: Our smart contract creates a liquidity posit
 
 An additional advantage is that while your Uniswap position is in range it accrues fees which are also paid out to you once the position is closed. You also don’t have to pay the swap fee on Uniswap. LimitRanger however takes a cut of the traded volume which is also used to pay for the transaction fees when our program closes positions for you. The contract can be configured to paz out a percentage of the fee to the wallet which successfully triggered the closing of the position. This is to incentivize other players to monitor and close eligble positions. 
 
+The LimitRanger contract is immutable and not upgradeable.
+
+Admin functionality is limited to:
+* Disabling opening of new orders
+* Setting the (minimum) protocol fee for new positions (already created positions are unaffected)
+* Setting the reward percentage of the total fee for the wallet sucessfully closing a position
+* Setting a new address for the protocol fee receiver
+* Setting a new address for the protocol operator
+
 ## Minting a new position
 
 To mint a new position the user calls the mintNewPosition function of the LimitRanger smart contract. 
