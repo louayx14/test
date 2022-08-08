@@ -296,6 +296,20 @@ contract LimitRanger {
     {       
         require(params.token0Amount == 0 || params.token1Amount == 0, 'Token amount of token0 or token1 must be 0');
         require(params.protocolFee >= currentMinFee, 'Protocol fee set too low');
+
+        uint256 ethAmount = 0;
+        // if msg value is greater than 0, check if sent ether matches weth token amount value 
+        if(msg.value > 0) {
+            if(params.token0 == address(weth9)) {            
+                ethAmount = params.token0Amount;
+            } else if (params.token1 == address(weth9)) {
+                ethAmount = params.token1Amount;
+            } else {
+                revert('Message value not 0');
+            }
+            require(ethAmount == msg.value, 'Invalid message value');
+        }
+        
         {
             IUniswapV3Pool pool = IUniswapV3Pool(uniswapV3Factory.getPool(params.token0, params.token1, params.poolFee));        
             //check if current tick is outside sell range
@@ -310,14 +324,14 @@ contract LimitRanger {
         if(params.token0Amount > 0) {
             // get token from user    
             IERC20 token = IERC20(params.token0);
-            if(token != weth9) {
+            if(token != weth9 || ethAmount == 0) {
                 bool result = token.transferFrom(msg.sender, address(this), params.token0Amount);            
                 require(result, "Transfer of token failed");
                 TransferHelper.safeApprove(params.token0, address(nonfungiblePositionManager), params.token0Amount);
             }
         } else {
             IERC20 token = IERC20(params.token1);
-            if(token != weth9) {
+            if(token != weth9 || ethAmount == 0) {
                 bool result = token.transferFrom(msg.sender, address(this), params.token1Amount);
                 require(result, "Transfer of token failed");
                 TransferHelper.safeApprove(params.token1, address(nonfungiblePositionManager), params.token1Amount);
@@ -338,12 +352,6 @@ contract LimitRanger {
                 deadline: block.timestamp
             });
 
-        uint256 ethAmount = 0;
-        if(params.token0 == address(weth9)) {
-            ethAmount = params.token0Amount;
-        } else if (params.token1 == address(weth9)) {
-            ethAmount = params.token1Amount;
-        }
         uint128 liquidity = 0;
         (tokenId,liquidity,,) = nonfungiblePositionManager.mint{value: ethAmount}(uniParams);
 

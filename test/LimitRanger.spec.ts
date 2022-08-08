@@ -154,6 +154,20 @@ describe("LimitRanger", () => {
             expect(positionInfo.sellAboveTarget).to.be.equal(false);
             expect(positionInfo.unwrapToNative).to.be.equal(false);
         });
+        it("mints a new position with weth as token0 without sending eth", async () => {
+            await wethContract.connect(enduser1).approve(limitRanger.address, token0Amount);
+            await wethContract.connect(enduser1).deposit({value: 1000});
+            mintParams.token0 = wethContract.address;
+            await limitRanger.connect(enduser1).mintNewPosition(mintParams);
+
+            const ownedPositions = await limitRanger.getOwnedPositions(enduser1.address);
+            expect(ownedPositions[0]).to.be.equal(nftTokenId);
+            const positionInfo = await limitRanger.positionInfos(ownedPositions[0]) as LimitRanger.PositionInfoStruct;
+            expect(positionInfo.fee).to.be.equal(protocolFee);
+            expect(positionInfo.owner).to.be.equal(enduser1.address);
+            expect(positionInfo.sellAboveTarget).to.be.equal(true);
+            expect(positionInfo.unwrapToNative).to.be.equal(false);
+        });
         it("mints a new position with eth as token0", async () => {
             mintParams.token0 = wethContract.address
             await limitRanger.connect(enduser1).mintNewPosition(mintParams, { value: mintParams.token0Amount });
@@ -202,6 +216,17 @@ describe("LimitRanger", () => {
             await tradeToken0.connect(enduser1).approve(limitRanger.address, mintParams.token1Amount);
             await expect(limitRanger.connect(enduser1).mintNewPosition(mintParams)).revertedWith('Current price of pool doesn\'t match desired sell range');
         })
+        it("fails if msg value is greater zero when not spending weth", async () => {
+            await expect(limitRanger.connect(enduser1).mintNewPosition(mintParams, { value: mintParams.token0Amount})).revertedWith('Message value not 0');
+        })
+        it("fails if msg value does not match tokenAmount specified when sending eth", async () => {
+            mintParams.token1 = wethContract.address
+            mintParams.token0Amount = 0
+            mintParams.token1Amount = 1000
+            mintParams.lowerTick = -180
+            mintParams.upperTick = -120
+            await expect(limitRanger.connect(enduser1).mintNewPosition(mintParams, { value:   mintParams.token1Amount+1})).revertedWith('Invalid message value');
+        })        
         it("fails if deadline is exceeded", async () => {
             mintParams.deadline = (await ethers.provider.getBlock(await ethers.provider.getBlockNumber())).timestamp
             await expect(limitRanger.connect(enduser1).mintNewPosition(mintParams)).revertedWith('Transaction too old');
