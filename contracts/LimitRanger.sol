@@ -295,6 +295,7 @@ contract LimitRanger {
         )
     {       
         require(params.token0Amount == 0 || params.token1Amount == 0, 'Token amount of token0 or token1 must be 0');
+        require(params.token0Amount > 0 || params.token1Amount > 0, 'Invalid token amount');
         require(params.protocolFee >= currentMinFee && params.protocolFee <= 500, 'Invalid protocol fee');
 
         uint256 ethAmount = 0;

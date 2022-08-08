@@ -216,6 +216,10 @@ describe("LimitRanger", () => {
             await tradeToken0.connect(enduser1).approve(limitRanger.address, mintParams.token1Amount);
             await expect(limitRanger.connect(enduser1).mintNewPosition(mintParams)).revertedWith('Current price of pool doesn\'t match desired sell range');
         })
+        it("fails if both token amounts are 0", async () => {
+            mintParams.token0Amount = 0;
+            await expect(limitRanger.connect(enduser1).mintNewPosition(mintParams)).revertedWith('Invalid token amount');
+        })
         it("fails if msg value is greater zero when not spending weth", async () => {
             await expect(limitRanger.connect(enduser1).mintNewPosition(mintParams, { value: mintParams.token0Amount})).revertedWith('Message value not 0');
         })
