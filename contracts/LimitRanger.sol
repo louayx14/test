@@ -323,17 +323,13 @@ contract LimitRanger {
         // Approve the position manager
         if(params.token0Amount > 0) {
             // get token from user    
-            IERC20 token = IERC20(params.token0);
-            if(token != weth9 || ethAmount == 0) {
-                bool result = token.transferFrom(msg.sender, address(this), params.token0Amount);            
-                require(result, "Transfer of token failed");
+            if(params.token0 != address(weth9) || ethAmount == 0) {
+                TransferHelper.safeTransferFrom(params.token0, msg.sender, address(this), params.token0Amount);            
                 TransferHelper.safeApprove(params.token0, address(nonfungiblePositionManager), params.token0Amount);
             }
         } else {
-            IERC20 token = IERC20(params.token1);
-            if(token != weth9 || ethAmount == 0) {
-                bool result = token.transferFrom(msg.sender, address(this), params.token1Amount);
-                require(result, "Transfer of token failed");
+            if(params.token1 != address(weth9) || ethAmount == 0) {
+                TransferHelper.safeTransferFrom(params.token1, msg.sender, address(this), params.token1Amount);
                 TransferHelper.safeApprove(params.token1, address(nonfungiblePositionManager), params.token1Amount);
             }
         }
