@@ -295,7 +295,7 @@ contract LimitRanger {
         )
     {       
         require(params.token0Amount == 0 || params.token1Amount == 0, 'Token amount of token0 or token1 must be 0');
-        require(params.protocolFee >= currentMinFee, 'Protocol fee set too low');
+        require(params.protocolFee >= currentMinFee && params.protocolFee <= 500, 'Invalid protocol fee');
 
         uint256 ethAmount = 0;
         // if msg value is greater than 0, check if sent ether matches weth token amount value 

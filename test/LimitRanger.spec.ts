@@ -233,7 +233,11 @@ describe("LimitRanger", () => {
         })
         it("fails if protocol fee is set too low", async () => {
             mintParams.protocolFee = 0
-            await expect(limitRanger.connect(enduser1).mintNewPosition(mintParams)).revertedWith('Protocol fee set too low');
+            await expect(limitRanger.connect(enduser1).mintNewPosition(mintParams)).revertedWith('Invalid protocol fee');
+        })
+        it("fails if protocol fee is set too high", async () => {
+            mintParams.protocolFee = 501
+            await expect(limitRanger.connect(enduser1).mintNewPosition(mintParams)).revertedWith('Invalid protocol fee');
         })
         it("fails if two token amounts are provided", async () => {
             mintParams.token1Amount = 100
