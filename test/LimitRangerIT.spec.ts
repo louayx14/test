@@ -3,8 +3,8 @@ import { solidity } from "ethereum-waffle";
 import { Wallet } from "ethers"
 import { LimitRanger } from "../typechain-types/contracts"
 import { ERC20 } from "../typechain-types/@openzeppelin/contracts/token/ERC20/ERC20"
-import { IUniswapV3Pool } from "../typechain-types/@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool"
-import { INonfungiblePositionManager } from "../typechain-types/@uniswap/v3-periphery/contracts/interfaces/INonfungiblePositionManager"
+import { IUniswapV3Pool } from "../typechain-types/contracts/interfaces/uniswap/IUniswapV3Pool"
+import { INonfungiblePositionManager } from "../typechain-types/contracts/interfaces/uniswap/INonfungiblePositionManager"
 
 import { TestERC721 } from "../typechain-types/contracts/test"
 import { ethers, waffle, network } from "hardhat";

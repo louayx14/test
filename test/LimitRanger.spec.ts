@@ -1,10 +1,9 @@
 import { expect, use } from "chai"
 import { deployMockContract, solidity } from "ethereum-waffle";
 import { Contract, Wallet, BigNumber } from "ethers"
-import IUniswapV3Factory from "../artifacts/@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol/IUniswapV3Factory.json"
-import IUniswapV3Pool from "../artifacts/@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json"
-import PosManagerAbi from "../artifacts/@uniswap/v3-periphery/contracts/interfaces/INonfungiblePositionManager.sol/INonfungiblePositionManager.json"
-import IWETH9 from "../artifacts/@uniswap/v3-periphery/contracts/interfaces/external/IWETH9.sol/IWETH9.json"
+import IUniswapV3Factory from "../artifacts/contracts/interfaces/uniswap/IUniswapV3Factory.sol/IUniswapV3Factory.json"
+import IUniswapV3Pool from "../artifacts/contracts/interfaces/uniswap/IUniswapV3Pool.sol/IUniswapV3Pool.json"
+import PosManagerAbi from "../artifacts/contracts/interfaces/uniswap/INonfungiblePositionManager.sol/INonfungiblePositionManager.json"
 import { LimitRanger } from "../typechain-types/contracts"
 
 import { TestERC20, TestERC721, TestWETH9 } from "../typechain-types/contracts/test"
