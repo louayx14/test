@@ -1,10 +1,13 @@
-pragma solidity =0.7.6;
+pragma solidity >=0.8.9;
 
 import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 
 contract TestERC20 is ERC20 {
-    constructor(string memory name_, string memory symbol_, uint8 decimals) ERC20(name_, symbol_) {
-        _setupDecimals(decimals); 
+
+    uint8 decimalPlaces;
+
+    constructor(string memory name_, string memory symbol_, uint8 _decimals) ERC20(name_, symbol_) {
+        decimalPlaces = _decimals;
         _mint(msg.sender, 1000000000000000000000000000);
     }
 
@@ -12,4 +15,7 @@ contract TestERC20 is ERC20 {
         _mint(to, amount);
         return true;
     }
+    function decimals() public view override returns (uint8) {
+		return decimalPlaces;
+	}
 }
