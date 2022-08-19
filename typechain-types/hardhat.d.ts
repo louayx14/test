@@ -13,17 +13,13 @@ import * as Contracts from ".";
 declare module "hardhat/types/runtime" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
     getContractFactory(
-      name: "ERC165",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.ERC165__factory>;
-    getContractFactory(
-      name: "IERC165",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IERC165__factory>;
-    getContractFactory(
       name: "ERC20",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20__factory>;
+    getContractFactory(
+      name: "IERC20Metadata",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20Metadata__factory>;
     getContractFactory(
       name: "IERC20",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -33,25 +29,29 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC721__factory>;
     getContractFactory(
-      name: "IERC721",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IERC721__factory>;
-    getContractFactory(
-      name: "IERC721Enumerable",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IERC721Enumerable__factory>;
-    getContractFactory(
       name: "IERC721Metadata",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC721Metadata__factory>;
+    getContractFactory(
+      name: "IERC721",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC721__factory>;
     getContractFactory(
       name: "IERC721Receiver",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC721Receiver__factory>;
     getContractFactory(
-      name: "IUniswapV3MintCallback",
+      name: "ERC165",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IUniswapV3MintCallback__factory>;
+    ): Promise<Contracts.ERC165__factory>;
+    getContractFactory(
+      name: "IERC165",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC165__factory>;
+    getContractFactory(
+      name: "INonfungiblePositionManager",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.INonfungiblePositionManager__factory>;
     getContractFactory(
       name: "IUniswapV3Factory",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -61,65 +61,9 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IUniswapV3Pool__factory>;
     getContractFactory(
-      name: "IUniswapV3PoolActions",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IUniswapV3PoolActions__factory>;
-    getContractFactory(
-      name: "IUniswapV3PoolDerivedState",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IUniswapV3PoolDerivedState__factory>;
-    getContractFactory(
-      name: "IUniswapV3PoolEvents",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IUniswapV3PoolEvents__factory>;
-    getContractFactory(
-      name: "IUniswapV3PoolImmutables",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IUniswapV3PoolImmutables__factory>;
-    getContractFactory(
-      name: "IUniswapV3PoolOwnerActions",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IUniswapV3PoolOwnerActions__factory>;
-    getContractFactory(
-      name: "IUniswapV3PoolState",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IUniswapV3PoolState__factory>;
-    getContractFactory(
-      name: "LiquidityManagement",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.LiquidityManagement__factory>;
-    getContractFactory(
-      name: "PeripheryImmutableState",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.PeripheryImmutableState__factory>;
-    getContractFactory(
-      name: "PeripheryPayments",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.PeripheryPayments__factory>;
-    getContractFactory(
       name: "IWETH9",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IWETH9__factory>;
-    getContractFactory(
-      name: "IERC721Permit",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IERC721Permit__factory>;
-    getContractFactory(
-      name: "INonfungiblePositionManager",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.INonfungiblePositionManager__factory>;
-    getContractFactory(
-      name: "IPeripheryImmutableState",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IPeripheryImmutableState__factory>;
-    getContractFactory(
-      name: "IPeripheryPayments",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IPeripheryPayments__factory>;
-    getContractFactory(
-      name: "IPoolInitializer",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.IPoolInitializer__factory>;
     getContractFactory(
       name: "LimitRanger",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -138,20 +82,15 @@ declare module "hardhat/types/runtime" {
     ): Promise<Contracts.TestWETH9__factory>;
 
     getContractAt(
-      name: "ERC165",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.ERC165>;
-    getContractAt(
-      name: "IERC165",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IERC165>;
-    getContractAt(
       name: "ERC20",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.ERC20>;
+    getContractAt(
+      name: "IERC20Metadata",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20Metadata>;
     getContractAt(
       name: "IERC20",
       address: string,
@@ -163,30 +102,35 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.ERC721>;
     getContractAt(
-      name: "IERC721",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IERC721>;
-    getContractAt(
-      name: "IERC721Enumerable",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IERC721Enumerable>;
-    getContractAt(
       name: "IERC721Metadata",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IERC721Metadata>;
+    getContractAt(
+      name: "IERC721",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC721>;
     getContractAt(
       name: "IERC721Receiver",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IERC721Receiver>;
     getContractAt(
-      name: "IUniswapV3MintCallback",
+      name: "ERC165",
       address: string,
       signer?: ethers.Signer
-    ): Promise<Contracts.IUniswapV3MintCallback>;
+    ): Promise<Contracts.ERC165>;
+    getContractAt(
+      name: "IERC165",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC165>;
+    getContractAt(
+      name: "INonfungiblePositionManager",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.INonfungiblePositionManager>;
     getContractAt(
       name: "IUniswapV3Factory",
       address: string,
@@ -198,80 +142,10 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IUniswapV3Pool>;
     getContractAt(
-      name: "IUniswapV3PoolActions",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IUniswapV3PoolActions>;
-    getContractAt(
-      name: "IUniswapV3PoolDerivedState",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IUniswapV3PoolDerivedState>;
-    getContractAt(
-      name: "IUniswapV3PoolEvents",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IUniswapV3PoolEvents>;
-    getContractAt(
-      name: "IUniswapV3PoolImmutables",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IUniswapV3PoolImmutables>;
-    getContractAt(
-      name: "IUniswapV3PoolOwnerActions",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IUniswapV3PoolOwnerActions>;
-    getContractAt(
-      name: "IUniswapV3PoolState",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IUniswapV3PoolState>;
-    getContractAt(
-      name: "LiquidityManagement",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.LiquidityManagement>;
-    getContractAt(
-      name: "PeripheryImmutableState",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.PeripheryImmutableState>;
-    getContractAt(
-      name: "PeripheryPayments",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.PeripheryPayments>;
-    getContractAt(
       name: "IWETH9",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IWETH9>;
-    getContractAt(
-      name: "IERC721Permit",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IERC721Permit>;
-    getContractAt(
-      name: "INonfungiblePositionManager",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.INonfungiblePositionManager>;
-    getContractAt(
-      name: "IPeripheryImmutableState",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IPeripheryImmutableState>;
-    getContractAt(
-      name: "IPeripheryPayments",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IPeripheryPayments>;
-    getContractAt(
-      name: "IPoolInitializer",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.IPoolInitializer>;
     getContractAt(
       name: "LimitRanger",
       address: string,

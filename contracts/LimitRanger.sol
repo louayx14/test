@@ -1,18 +1,16 @@
 // SPDX-License-Identifier: BUSL-1.1
-pragma solidity =0.7.6;
+pragma solidity >=0.8.9;
 pragma abicoder v2;
 
-import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
-import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol';
-import '@uniswap/v3-core/contracts/libraries/TickMath.sol';
 import '@openzeppelin/contracts/token/ERC721/IERC721.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import '@openzeppelin/contracts/math/SafeMath.sol';
-import '@uniswap/v3-periphery/contracts/interfaces/INonfungiblePositionManager.sol';
-import '@uniswap/v3-periphery/contracts/interfaces/external/IWETH9.sol';
-import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
-import '@uniswap/v3-periphery/contracts/base/LiquidityManagement.sol';
-import "hardhat/console.sol";
+
+import 'contracts/interfaces/uniswap/INonfungiblePositionManager.sol';
+import 'contracts/interfaces/uniswap/IUniswapV3Pool.sol';
+import 'contracts/interfaces/uniswap/IUniswapV3Factory.sol';
+import 'contracts/interfaces/uniswap/IWETH9.sol';
+
+import './UniswapTransferHelper.sol';
 
 /// @title A contract which allows automated range orders for Uniswap by opening a liquidity position 
 ///        and allowing anyone to close the position once the selling price is reached and returning the assets
@@ -43,9 +41,6 @@ contract LimitRanger {
 
     /// switch to disable opening of new positions
     bool public depositsActive;
-
-    /// using safe math lib for uint256 variables
-    using SafeMath for uint256;
 
     /// @dev Uniswap maximum tick value of a liquidity pool
     int24 constant MAX_TICK = (2**24/2)-1;
@@ -295,7 +290,22 @@ contract LimitRanger {
         )
     {       
         require(params.token0Amount == 0 || params.token1Amount == 0, 'Token amount of token0 or token1 must be 0');
-        require(params.protocolFee >= currentMinFee, 'Protocol fee set too low');
+        require(params.token0Amount > 0 || params.token1Amount > 0, 'Invalid token amount');
+        require(params.protocolFee >= currentMinFee && params.protocolFee <= 500, 'Invalid protocol fee');
+
+        uint256 ethAmount = 0;
+        // if msg value is greater than 0, check if sent ether matches weth token amount value 
+        if(msg.value > 0) {
+            if(params.token0 == address(weth9)) {            
+                ethAmount = params.token0Amount;
+            } else if (params.token1 == address(weth9)) {
+                ethAmount = params.token1Amount;
+            } else {
+                revert('Message value not 0');
+            }
+            require(ethAmount == msg.value, 'Invalid message value');
+        }
+        
         {
             IUniswapV3Pool pool = IUniswapV3Pool(uniswapV3Factory.getPool(params.token0, params.token1, params.poolFee));        
             //check if current tick is outside sell range
@@ -309,18 +319,14 @@ contract LimitRanger {
         // Approve the position manager
         if(params.token0Amount > 0) {
             // get token from user    
-            IERC20 token = IERC20(params.token0);
-            if(token != weth9) {
-                bool result = token.transferFrom(msg.sender, address(this), params.token0Amount);            
-                require(result, "Transfer of token failed");
-                TransferHelper.safeApprove(params.token0, address(nonfungiblePositionManager), params.token0Amount);
+            if(params.token0 != address(weth9) || ethAmount == 0) {
+                UniswapTransferHelper.safeTransferFrom(params.token0, msg.sender, address(this), params.token0Amount);            
+                UniswapTransferHelper.safeApprove(params.token0, address(nonfungiblePositionManager), params.token0Amount);
             }
         } else {
-            IERC20 token = IERC20(params.token1);
-            if(token != weth9) {
-                bool result = token.transferFrom(msg.sender, address(this), params.token1Amount);
-                require(result, "Transfer of token failed");
-                TransferHelper.safeApprove(params.token1, address(nonfungiblePositionManager), params.token1Amount);
+            if(params.token1 != address(weth9) || ethAmount == 0) {
+                UniswapTransferHelper.safeTransferFrom(params.token1, msg.sender, address(this), params.token1Amount);
+                UniswapTransferHelper.safeApprove(params.token1, address(nonfungiblePositionManager), params.token1Amount);
             }
         }
         INonfungiblePositionManager.MintParams memory uniParams =
@@ -338,12 +344,6 @@ contract LimitRanger {
                 deadline: block.timestamp
             });
 
-        uint256 ethAmount = 0;
-        if(params.token0 == address(weth9)) {
-            ethAmount = params.token0Amount;
-        } else if (params.token1 == address(weth9)) {
-            ethAmount = params.token1Amount;
-        }
         uint128 liquidity = 0;
         (tokenId,liquidity,,) = nonfungiblePositionManager.mint{value: ethAmount}(uniParams);
 
@@ -369,7 +369,7 @@ contract LimitRanger {
         // remove token from ownedTokens array by reducing the arrays size and moving the token in last position to the spot of the to be deleted one.
         // set last token to index of removed token, then decrease array size (so we don't have gaps in the array)
         uint256 tokenIndex = ownedTokensIndex[tokenId];
-        uint256 lastTokenIndex = (ownedTokens[receiver].length.sub(1));
+        uint256 lastTokenIndex = (ownedTokens[receiver].length - 1);
         uint256 lastToken = ownedTokens[receiver][lastTokenIndex];
         ownedTokens[receiver][tokenIndex] = lastToken;
         ownedTokens[receiver].pop();
@@ -465,24 +465,24 @@ contract LimitRanger {
         if(collectedAmount > 0) {
             if (unwrapToNative && token == address(weth9)) {
                 weth9.withdraw(collectedAmount);
-                TransferHelper.safeTransferETH(receiver, collectedAmount - fee);
+                UniswapTransferHelper.safeTransferETH(receiver, collectedAmount - fee);
             } else {
-                TransferHelper.safeTransfer(token, receiver, collectedAmount - fee);
+                UniswapTransferHelper.safeTransfer(token, receiver, collectedAmount - fee);
             }
         }
         if(fee > 0) {
             // calculate reward for address who closed position
             uint256 reward = (fee * currentStopPositionReward)/100;
             if (unwrapToNative && token == address(weth9)) {
-                TransferHelper.safeTransferETH(protocolFeeReceiver, fee - reward);
+                UniswapTransferHelper.safeTransferETH(protocolFeeReceiver, fee - reward);
             } else {
-                TransferHelper.safeTransfer(token, protocolFeeReceiver, fee - reward);
+                UniswapTransferHelper.safeTransfer(token, protocolFeeReceiver, fee - reward);
             }
             if(reward > 0) {
                 if (unwrapToNative && token == address(weth9)) {
-                    TransferHelper.safeTransferETH(msg.sender, reward);
+                    UniswapTransferHelper.safeTransferETH(msg.sender, reward);
                 } else {
-                    TransferHelper.safeTransfer(token, msg.sender, reward);
+                    UniswapTransferHelper.safeTransfer(token, msg.sender, reward);
                 }    
             }
         }
@@ -497,7 +497,7 @@ contract LimitRanger {
     // @dev Escape hatch to retrieve ERC20s stranded in the contract. Only callable by operator.
     function retrieveERC20(address token) external onlyOperator {
         IERC20 erc20 = IERC20(token);
-        TransferHelper.safeTransfer(token, protocolFeeReceiver, erc20.balanceOf(address(this)));
+        UniswapTransferHelper.safeTransfer(token, protocolFeeReceiver, erc20.balanceOf(address(this)));
     }
 
     // @dev receive function to be able to receive ether on contract 
