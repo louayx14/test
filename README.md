@@ -13,6 +13,9 @@ An additional advantage is that while your Uniswap position is in range it accru
 
 The LimitRanger contract is immutable and not upgradeable.
 
+The contract was audited by an independent security expert and the report can be viewed [here](AuditReport.pdf).
+
+
 Admin functionality is limited to:
 * Disabling opening of new orders
 * Setting the (minimum) protocol fee for new positions (already created positions are unaffected)
