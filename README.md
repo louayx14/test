@@ -1,5 +1,15 @@
 # LimitRanger Smart Contract
 
+## Contract addresses
+Always make sure you interact with the real UniLimit smart contract.
+
+The LimitRanger contract addresses for the different networks are:
+
+| Network | Address |
+| --- | --- |
+| Arbitrum One | [0xd5c5bd7d311e1739a84079466ab098f83ebcab77](https://arbiscan.io/address/0xd5c5bd7d311e1739a84079466ab098f83ebcab77) |
+| Arbitrum Rinkeby | [0x400c325bcac8c1c89974093b15bc800231d872e2](https://testnet.arbiscan.io/address/0x400c325bcac8c1c89974093b15bc800231d872e2) |
+
 ## General concept
 LimitRanger allows the automation of Range Orders on Uniswap.
 
