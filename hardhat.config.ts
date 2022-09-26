@@ -65,7 +65,8 @@ const config: HardhatUserConfig = {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
     apiKey: {
-      arbitrumTestnet: ETHERSCAN_API_KEY
+      arbitrumTestnet: ETHERSCAN_API_KEY,
+      arbitrumOne: ETHERSCAN_API_KEY,
     }
   },
   tenderly: {
