@@ -1,7 +1,7 @@
 # LimitRanger Smart Contract
 
 ## Contract addresses
-Always make sure you interact with the real UniLimit smart contract.
+Always make sure you interact with the real LimitRanger smart contract.
 
 The LimitRanger contract addresses for the different networks are:
 
