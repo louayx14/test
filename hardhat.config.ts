@@ -40,6 +40,10 @@ const config: HardhatUserConfig = {
       url: `https://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
       accounts: [RINKEBY_PK]
     },
+    goerli: {
+      url: `https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+      accounts: [RINKEBY_PK]
+    },
     rinkebyArb: {
       url: 'https://rinkeby.arbitrum.io/rpc',
       accounts: [RINKEBY_PK],
@@ -67,6 +71,7 @@ const config: HardhatUserConfig = {
     apiKey: {
       arbitrumTestnet: ETHERSCAN_API_KEY,
       arbitrumOne: ETHERSCAN_API_KEY,
+      goerli: ETHERSCAN_API_KEY,
     }
   },
   tenderly: {
