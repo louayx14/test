@@ -8,6 +8,7 @@ The LimitRanger contract addresses for the different networks are:
 | Network | Address |
 | --- | --- |
 | Arbitrum One | [0xd5c5bd7d311e1739a84079466ab098f83ebcab77](https://arbiscan.io/address/0xd5c5bd7d311e1739a84079466ab098f83ebcab77) |
+| Goerli Testnet | [0xbe4d22d73d5705c98d260563ca7f937c41b0c82a](https://goerli.etherscan.io/address/0xbe4d22d73d5705c98d260563ca7f937c41b0c82a) |
 | Arbitrum Rinkeby | [0x400c325bcac8c1c89974093b15bc800231d872e2](https://testnet.arbiscan.io/address/0x400c325bcac8c1c89974093b15bc800231d872e2) |
 
 ## General concept
