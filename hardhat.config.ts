@@ -11,6 +11,7 @@ const RINKEBY_PK = process.env.RINKEBY_PK || "d0000000d0000000d0000000d0000000d0
 const ARBONE_PK = process.env.ARBONE_PK || "d0000000d0000000d0000000d0000000d0000000d0000000d0000000d0000000";
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY || ""
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || ""
+const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY || ""
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -54,6 +55,11 @@ const config: HardhatUserConfig = {
       accounts: [ARBONE_PK],
       chainId: 42161
     },
+    polygon: {
+      url: 'https://polygon-rpc.com',
+      accounts: [ARBONE_PK],
+      chainId: 137
+    },
     hardhat: {
       // forking: {
       //   url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
@@ -72,6 +78,7 @@ const config: HardhatUserConfig = {
       arbitrumTestnet: ETHERSCAN_API_KEY,
       arbitrumOne: ETHERSCAN_API_KEY,
       goerli: ETHERSCAN_API_KEY,
+      polygon: POLYGONSCAN_API_KEY,
     }
   },
   tenderly: {
