@@ -56,7 +56,7 @@ const config: HardhatUserConfig = {
       chainId: 42161
     },
     polygon: {
-      url: 'https://polygon-rpc.com',
+      url: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
       accounts: [ARBONE_PK],
       chainId: 137
     },
