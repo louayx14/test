@@ -27,6 +27,8 @@ The LimitRanger contract is immutable and not upgradeable.
 
 The contract was audited by an independent security expert and the report can be viewed [here](AuditReport.pdf).
 
+You can check the [Auditor's Github](https://github.com/OpenCoreCH) and the [Auditor's References](https://github.com/OpenCoreCH/smart-contract-audits#readme).
+
 
 Admin functionality is limited to:
 * Disabling opening of new orders
