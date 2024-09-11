@@ -43,7 +43,7 @@ pipeline {
     post {
         always {
             // Clean workspace after build
-            cleanWs()
+           //cleanWs()
         }
         success {
             echo 'Unit tests passed!'
