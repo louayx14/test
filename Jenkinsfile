@@ -4,6 +4,7 @@ pipeline {
     environment {
         NODE_HOME = '/usr/local/bin'
         PATH = "${env.NODE_HOME}:${env.PATH}"
+        LOCAL_DIR = 'unit test + metric'  // Ensure LOCAL_DIR is defined
     }
 
     stages {
@@ -14,7 +15,7 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        /*stage('Install Dependencies') {
             steps {
                 // Install npm dependencies
                 sh 'npm install'
@@ -28,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('Run Solidity Code Metrics') {
+    */    stage('Run Solidity Code Metrics') {
             steps {
                         // Run solidity-code-metrics on all Solidity files in the contracts directory
                         sh "cd contracts"
