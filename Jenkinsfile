@@ -20,8 +20,24 @@ pipeline {
                 sh 'npx hardhat test'
             }
         }
-    }
+         stage('Run Solidity Code Metrics') {
+            steps {
+                script {
+                    // Define the path to the contracts directory
+                    def contractsDir = "${LOCAL_DIR}/contracts"
 
+                    // Check if the contracts directory exists
+                    if (fileExists(contractsDir)) {
+                        // Run solidity-code-metrics on all Solidity files in the contracts directory
+                        sh "solidity-code-metrics ${contractsDir}/*.sol --html > ${LOCAL_DIR}/metrics.html"
+                    } else {
+                        error "Contracts directory does not exist: ${contractsDir}"
+                    }
+                }
+            }
+        }
+    }
+    
     post {
         always {
             // Clean workspace after build
