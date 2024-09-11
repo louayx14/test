@@ -32,7 +32,7 @@ pipeline {
     */    stage('Run Solidity Code Metrics') {
             steps {
                         // Run solidity-code-metrics on all Solidity files in the contracts directory
-                        sh "cd contracts || { echo "Failed to enter 'contracts' directory"; exit 1; }"
+                        sh "cd ../contracts"
                         sh "ls"
                         sh "solidity-code-metrics *.sol --html > ../metrics.html"
                     }
