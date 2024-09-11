@@ -19,26 +19,23 @@ pipeline {
                 sh 'npm install'
             }
         }
-      /*stage('Run Unit Tests') {
+        stage('Run Unit Tests') {
             steps {
                 // Run Hardhat tests
                 sh 'npx hardhat test'
             }
-        }*/
+        }
         stage('Run Solidity Code Metrics') {
             steps {
                 script {
-                    def contractsDir = "${LOCAL_DIR}/contracts"
-                    // Check if the contracts directory exists
-                    if (fileExists(contractsDir)) {
+                    dir("${LOCAL_DIR}/contracts") {
                         // Run solidity-code-metrics on all Solidity files in the contracts directory
-                        sh "solidity-code-metrics ${contractsDir}/*.sol --html > ${LOCAL_DIR}/metrics.html"
-                    } else {
-                        error "Contracts directory does not exist: ${contractsDir}"
+                        sh "solidity-code-metrics *.sol --html > ../metrics.html"
                     }
                 }
             }
         }
+       
     }
     post {
         always {
