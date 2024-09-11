@@ -13,7 +13,12 @@ pipeline {
                 git url: 'https://github.com/louayx14/test.git', branch: 'main'
             }
         }
-     
+        stage('Install Dependencies') {
+            steps {
+                // Install npm dependencies
+                sh 'npm install'
+            }
+        }
         stage('Run Unit Tests') {
             steps {
                 // Run Hardhat tests
