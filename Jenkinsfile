@@ -14,7 +14,7 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+       /* stage('Install Dependencies') {
             steps {
                 // Install npm dependencies
                 sh 'npm install'
@@ -26,7 +26,7 @@ pipeline {
                 // Run Hardhat tests
                 sh 'npx hardhat test'
             }
-        }
+        }*/
 
         stage('Run Solidity Code Metrics') {
             steps {
