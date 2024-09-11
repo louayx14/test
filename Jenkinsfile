@@ -14,7 +14,7 @@ pipeline {
             }
         }
 
-       /* stage('Install Dependencies') {
+        stage('Install Dependencies') {
             steps {
                 // Install npm dependencies
                 sh 'npm install'
@@ -26,21 +26,22 @@ pipeline {
                 // Run Hardhat tests
                 sh 'npx hardhat test'
             }
-        }*/
+        }
 
         stage('Run Solidity Code Metrics') {
             steps {
-                script {
-                    dir("${LOCAL_DIR}/contracts") {
                         // Run solidity-code-metrics on all Solidity files in the contracts directory
+                        sh "cd contracts"
                         sh "solidity-code-metrics *.sol --html > ../metrics.html"
                     }
-                }
-            }
         }
     }
 
     post {
+        always {
+            // Clean workspace after build
+            cleanWs()
+        }  
         success {
             echo 'Unit tests passed!'
         }
