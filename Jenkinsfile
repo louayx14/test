@@ -25,12 +25,10 @@ pipeline {
                 sh 'npx hardhat test'
             }
         }
-         stage('Run Solidity Code Metrics') {
+        stage('Run Solidity Code Metrics') {
             steps {
                 script {
-                    // Define the path to the contracts directory
                     def contractsDir = "${LOCAL_DIR}/contracts"
-
                     // Check if the contracts directory exists
                     if (fileExists(contractsDir)) {
                         // Run solidity-code-metrics on all Solidity files in the contracts directory
@@ -41,7 +39,7 @@ pipeline {
                 }
             }
         }
-    
+    }
     post {
         always {
             // Clean workspace after build
