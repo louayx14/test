@@ -33,6 +33,7 @@ pipeline {
             steps {
                         // Run solidity-code-metrics on all Solidity files in the contracts directory
                         sh "cd contracts"
+                        sh "ls"
                         sh "solidity-code-metrics *.sol --html > ../metrics.html"
                     }
         }
