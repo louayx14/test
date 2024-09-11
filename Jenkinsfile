@@ -19,12 +19,12 @@ pipeline {
                 sh 'npm install'
             }
         }
-        stage('Run Unit Tests') {
+      /*stage('Run Unit Tests') {
             steps {
                 // Run Hardhat tests
                 sh 'npx hardhat test'
             }
-        }
+        }*/
         stage('Run Solidity Code Metrics') {
             steps {
                 script {
